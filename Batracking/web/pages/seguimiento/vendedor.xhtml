@@ -1,0 +1,140 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/templates/plantilla.xhtml">
+	<ui:define name="contenido">
+		<p:growl id="menGen" />
+		<p:toolbar>
+			<f:facet name="left">
+				<p:outputLabel value="Operaciones Vendedor" />
+			</f:facet>
+			<f:facet name="right">
+				<p:commandButton value="Nuevo" icon="ui-icon-document"
+					process="@this :frmGen:tabVieGen:datTabPro"
+					actionListener="#{vendedorBean.resetearFormulario}" update="@form"
+					onstart="PF('widDatTabPro').clearSelection();" />
+				<p:commandButton value="Guardar" icon="ui-icon-disk"
+					process="@this :frmGen:tabVieGen:panGriDatGen :frmGen:tabVieGen:panGriDatCli 
+							:frmGen:tabVieGen:panGriDatVeh"
+					actionListener="#{vendedorBean.guardar}" update=":frmGen:menGen" />
+			</f:facet>
+		</p:toolbar>
+		<br />
+		<p:tabView id="tabVieGen">
+			<p:tab title="Lista Productos">
+				<p:dataTable id="datTabPro" value="#{vendedorBean.listaSeguimiento}"
+					var="seg" rowKey="#{seg.idSeguimiento}" paginator="true" rows="10"
+					selectionMode="single" widgetVar="widDatTabPro"
+					emptyMessage="Ningún registro encontrado">
+					<f:facet name="header">
+						<p:outputLabel value="Lista Productos" />
+					</f:facet>
+					<p:ajax event="rowSelect"
+						listener="#{vendedorBean.seleccionarProducto}"
+						update=":frmGen:tabVieGen:cmbTipTra" />
+					<p:column headerText="Fábrica:"
+						sortBy="#{seg.producto.entidad.entNombre}"
+						filterBy="#{seg.producto.entidad.entNombre}">
+						<p:outputLabel value="#{seg.producto.entidad.entNombre}" />
+					</p:column>
+					<p:column headerText="Estado"
+						sortBy="#{seg.producto.prodEstadoBateria}"
+						filterBy="#{seg.producto.prodEstadoBateria}">
+						<p:outputLabel value="#{seg.producto.prodEstadoBateria}" />
+					</p:column>
+					<p:column headerText="Producto"
+						sortBy="#{seg.producto.prodCodigo} ">
+						<p:outputLabel value="#{seg.producto.prodCodigo}" />
+					</p:column>
+					<p:column headerText="Especificación"
+						sortBy="#{seg.producto.prodEspecificaciones} ">
+						<p:outputLabel value="#{seg.producto.prodEspecificaciones}" />
+					</p:column>
+					<p:column headerText="Fecha Producción"
+						sortBy="#{seg.producto.prodFechaProduccion}">
+						<p:outputLabel value="#{seg.producto.prodFechaProduccion}">
+							<f:convertDateTime pattern="yyyy-MM-dd"
+								timeZone="#{vendedorBean.timezone}" />
+						</p:outputLabel>
+					</p:column>
+					<p:column headerText="Fecha Venta"
+						sortBy="#{seg.producto.prodFechaVenta}">
+						<p:outputLabel value="#{seg.producto.prodFechaVenta}">
+							<f:convertDateTime pattern="yyyy-MM-dd"
+								timeZone="#{vendedorBean.timezone}" />
+						</p:outputLabel>
+					</p:column>
+					<p:column headerText="Fecha Mantenimiento"
+						sortBy="#{seg.producto.prodFechaMantenimiento}">
+						<p:outputLabel value="#{seg.producto.prodFechaMantenimiento}">
+							<f:convertDateTime pattern="yyyy-MM-dd"
+								timeZone="#{vendedorBean.timezone}" />
+						</p:outputLabel>
+					</p:column>
+					<p:column headerText="Fecha Garantía"
+						sortBy="#{seg.producto.prodFechaRepone}">
+						<p:outputLabel value="#{seg.producto.prodFechaRepone}">
+							<f:convertDateTime pattern="yyyy-MM-dd"
+								timeZone="#{vendedorBean.timezone}" />
+						</p:outputLabel>
+					</p:column>
+				</p:dataTable>
+			</p:tab>
+			<p:tab title="Seguimiento Vendedor">
+				<p:panelGrid id="panGriDatGen" columns="6" style="width:100%">
+					<f:facet name="header">
+						<p:outputLabel value="Datos Generales" />
+					</f:facet>
+					<p:outputLabel for="cmbTipTra" value="Tipo Transacción:" />
+					<p:selectOneMenu id="cmbTipTra" effect="drop" required="true"
+						value="#{vendedorBean.tipTra}">
+						<f:selectItem itemLabel="Seleccione una opción"
+							noSelectionOption="true" />
+						<f:selectItems value="#{vendedorBean.listaTransacciones}" />
+					</p:selectOneMenu>
+					<p:outputLabel for="calFecTra" value="Fecha Transacción:" />
+					<p:calendar id="calFecTra" navigator="true" pattern="yyyy-MM-dd"
+						value="#{vendedorBean.fechaTra}" />
+				</p:panelGrid>
+				<br></br>
+				<p:panelGrid id="panGriDatCli" columns="4" style="width:100%">
+					<f:facet name="header">
+						<p:outputLabel value="Datos Cliente" />
+					</f:facet>
+					<p:outputLabel for="txtNomCli" value="Nombres:" />
+					<p:inputText id="txtNomCli" maxlength="25" required="true"
+						value="#{vendedorBean.clienteFinal.cliNombres}" />
+					<p:outputLabel for="txtApeCli" value="Apellidos:" />
+					<p:inputText id="txtApeCli" maxlength="25" required="true"
+						value="#{vendedorBean.clienteFinal.cliApellidos}" />
+					<p:outputLabel for="txtTelCli" value="Teléfono:" />
+					<p:inputText id="txtTelCli" maxlength="10"
+						value="#{vendedorBean.clienteFinal.cliTelefono}" />
+					<p:outputLabel for="txtCorCli" value="Correo:" />
+					<p:inputText id="txtCorCli" maxlength="50"
+						value="#{vendedorBean.clienteFinal.cliEmail}" />
+				</p:panelGrid>
+				<br></br>
+				<p:panelGrid id="panGriDatVeh" columns="4" style="width:100%">
+					<f:facet name="header">
+						<p:outputLabel value="Datos Vehículo" />
+					</f:facet>
+					<p:outputLabel for="txtPlaVeh" value="Nro Placa:" />
+					<p:inputText id="txtPlaVeh" maxlength="10" required="true"
+						value="#{vendedorBean.clienteFinal.cliVehiculoPlaca}" />
+					<p:outputLabel for="txtMarVeh" value="Marca:" />
+					<p:inputText id="txtMarVeh" maxlength="25" required="true"
+						value="#{vendedorBean.clienteFinal.cliVehiculoMarca}" />
+					<p:outputLabel for="txtModVeh" value="Modelo:" />
+					<p:inputText id="txtModVeh" maxlength="25" required="true"
+						value="#{vendedorBean.clienteFinal.cliVehiculoModelo}" />
+					<p:outputLabel for="txtColVeh" value="Color:" />
+					<p:inputText id="txtColVeh" maxlength="25" required="true"
+						value="#{vendedorBean.clienteFinal.cliVehiculoColor}" />
+				</p:panelGrid>
+			</p:tab>
+		</p:tabView>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<f:facet name="first">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="viewport"
+			content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+	</f:facet>
+	<title>Sistema de Batracking</title>
+</h:head>
+
+<h:body styleClass="login-body">
+	<h:form id="frmUsu">
+		<p:growl id="menUsu" />
+		<div class="login-panel ui-fluid">
+			<div class="ui-g">
+				<div class="ui-g-12">
+					<p:outputLabel value="BATRACKING" style="font-weight:bold;" />
+				</div>
+				<div class="ui-g-12 logo-container">
+					<p:graphicImage name="logo-dacar.png" library="img" width="200px"
+					 height="88px"/>
+					
+				</div>
+				<div class="ui-g-12">
+					<p:inputText id="txtNomUsu" value="#{loginBean.usuario.usuNombre}"
+						maxlength="10" required="true" requiredMessage="Usuario requerido"
+						placeholder="Usuario:" />
+				</div>
+				<div class="ui-g-12">
+					<p:password id="ptxtClaUsu" maxlength="10"
+						goodLabel="Buena" weakLabel="Simple" strongLabel="Fuerte"
+						placeholder="Clave:" value="#{loginBean.usuario.usuPassword}"
+						required="true" requiredMessage="clave requerida" />
+				</div>
+				<div class="ui-g-12 button-container">
+					<p:commandButton icon="fa fa-user" value="Ingresar"
+						process="@this :frmUsu:txtNomUsu :frmUsu:ptxtClaUsu"
+						actionListener="#{loginBean.validarUsuario}"
+						update=":frmUsu:menUsu" styleClass="turquoise-btn" />
+				</div>
+				<div class="ui-g-12">
+					<p:outputLabel value="Batracking 2017 - Desarrollado por Matoosfe" style="font-size:10px!important;"/>
+				</div>
+			</div>
+		</div>
+		<h:outputStylesheet name="css/layout-blue.css"
+			library="poseidon-layout" />
+	</h:form>
+</h:body>
+
+</html>

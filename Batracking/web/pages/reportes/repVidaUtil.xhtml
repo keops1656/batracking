@@ -1,0 +1,176 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/templates/plantilla.xhtml">
+	<ui:define name="contenido">
+		<p:growl id="menGen" />
+		<p:toolbar>
+			<f:facet name="left">
+				<p:outputLabel value="Reporte Vida Útil" />
+			</f:facet>
+			<f:facet name="right">
+				<p:commandButton value="Nuevo" icon="ui-icon-document"
+					process="@this"
+					actionListener="#{repVidaUtilBean.resetearFormulario}"
+					update="@form" />
+				<p:commandButton value="Buscar" icon="ui-icon-search"
+					process="@this :frmGen:panGriPro"
+					actionListener="#{repVidaUtilBean.buscar}"
+					update=":frmGen:panGriPro :frmGen:datTabPro :frmGen:menGen" />
+				<span class="ui-separator"> <span
+					class="ui-icon ui-icon-grip-dotted-vertical" />
+				</span>
+			</f:facet>
+		</p:toolbar>
+		<br />
+		<p:panelGrid id="panGriPro" columns="4" style="width:100%">
+			<p:outputLabel value="Tipo Entidad:" styleClass="etiquetaReq" />
+			<p:selectOneMenu id="cmbTipEnt" effect="drop" required="true"
+				value="#{repVidaUtilBean.idTipEnt}" style="width:200px!important">
+				<f:selectItem itemLabel="Seleccione una opción" itemValue=""
+					noSelectionOption="true" />
+				<f:selectItems value="#{repVidaUtilBean.listaTipoEntidades}" />
+				<p:ajax event="change"
+					listener="#{repVidaUtilBean.cargarEntidadesPadre}"
+					update=":frmGen:cmbEnt :frmGen:datGri :frmGen:datTabPro" />
+			</p:selectOneMenu>
+			<p:outputLabel value="Entidad:" styleClass="etiquetaReq" />
+			<p:selectOneMenu id="cmbEnt" effect="drop" required="true"
+				value="#{repVidaUtilBean.idEnt}" style="width:200px!important">
+				<f:selectItem itemLabel="Seleccione una opción" itemValue=""
+					noSelectionOption="true" />
+				<f:selectItems value="#{repVidaUtilBean.listaEntidades}" />
+				<p:ajax event="change" listener="#{repVidaUtilBean.buscar}"
+					update=":frmGen:datGri" />
+			</p:selectOneMenu>
+		</p:panelGrid>
+		<br />
+		<center>
+			<p:dataGrid id="datGri" columns="3" layout="grid" rows="3"
+				style="width:100%" value="#{repVidaUtilBean.panelesSumarizados}"
+				var="das">
+				<f:facet name="header">
+					<h:outputLabel value="Resumen Vida Útil" />
+				</f:facet>
+				<p:panel header="#{das.titulo}" style="text-align:center">
+					<h:panelGrid columns="3"
+						style="width:100%;background-color:#{das.color};">
+						<p:outputLabel value="#{das.etiqueta}" />
+						<p:outputLabel value="#{das.valor}" />
+						<p:commandLink process="@form"
+							action="#{repVidaUtilBean.cargarDetalleReporte}"
+							update=":frmGen:datTabPro">
+							<h:outputLabel value="Revisar" />
+							<f:setPropertyActionListener value="#{das}"
+								target="#{repVidaUtilBean.dashboardSel}" />
+						</p:commandLink>
+					</h:panelGrid>
+				</p:panel>
+			</p:dataGrid>
+		</center>
+		<br></br>
+		<p:dataTable id="datTabPro"
+			value="#{repVidaUtilBean.listaSeguimientoBus}" var="rep"
+			rowKey="#{rep.seguimiento.producto.idProducto}" paginator="true"
+			rows="10" emptyMessage="Ningún registro encontrado">
+			<f:facet name="header">
+				<p:outputLabel value="Productos/Seguimiento" />
+			</f:facet>
+			<f:facet name="{Exporters}">
+				<h:commandLink>
+					<p:graphicImage library="img" name="iconoExcel.png" width="24" />
+					<p:dataExporter type="xls" target="datTabPro"
+						fileName="seguimiento" />
+				</h:commandLink>
+			</f:facet>
+			<p:column headerText="Código Producto">
+				<p:outputLabel value="#{rep.seguimiento.producto.prodCodigo}" />
+			</p:column>
+			<p:column headerText="Estado Producto">
+				<p:outputLabel value="#{rep.seguimiento.producto.prodEstadoBateria}" />
+			</p:column>
+			<p:column headerText="Fecha Fabricación Producto">
+				<p:outputLabel
+					value="#{rep.seguimiento.producto.prodFechaProduccion}">
+					<f:convertDateTime pattern="yyyy-MM-dd" />
+				</p:outputLabel>
+			</p:column>
+			<p:column headerText="Nro. Pallet">
+				<p:outputLabel value="#{rep.seguimiento.producto.pallet.pallCodigo}" />
+			</p:column>
+			<p:column headerText="Cliente">
+				<p:outputLabel
+					value="#{rep.cliente.cliNombres} #{rep.cliente.cliApellidos}" />
+			</p:column>
+			<p:column headerText="Placa">
+				<p:outputLabel value="#{rep.cliente.cliVehiculoPlaca}" />
+			</p:column>
+			<p:column headerText="Marca">
+				<p:outputLabel value="#{rep.cliente.cliVehiculoMarca}" />
+			</p:column>
+			<p:column headerText="Modelo">
+				<p:outputLabel value="#{rep.cliente.cliVehiculoModelo}" />
+			</p:column>
+			<p:column headerText="Color">
+				<p:outputLabel value="#{rep.cliente.cliVehiculoColor}" />
+			</p:column>
+			<p:column headerText="Días Restantes Vida Útil">
+				<p:outputLabel value="#{rep.diasRestantesVU}" />
+			</p:column>
+			<p:column headerText="Seguimiento">
+				<p:commandButton value="Detalles" process="@this"
+					actionListener="#{repVidaUtilBean.cargarDetallesSeguimiento(rep.seguimiento.producto)}"
+					update=":frmMen:datTabSegProd :frmGen:menGen" />
+			</p:column>
+
+		</p:dataTable>
+	</ui:define>
+	<ui:define name="mensaje">
+		<p:dialog widgetVar="diaSegPro" width="500" height="300"
+			header="Seguimiento Producto">
+			<p:dataTable id="datTabSegProd" var="seg"
+				value="#{repVidaUtilBean.detallesSeg}"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
+				paginator="true" rows="10">
+				<f:facet name="{Exporters}">
+					<h:commandLink>
+						<p:graphicImage library="img" name="iconoExcel.png" width="24" />
+						<p:dataExporter type="xls" target="datTabSegProd"
+							fileName="seguimientoProducto" />
+					</h:commandLink>
+					<h:commandLink>
+						<p:graphicImage library="img" name="iconoPdf.png" width="24" />
+						<p:dataExporter type="pdf" target="datTabSegProd"
+							fileName="seguimientoProducto" />
+					</h:commandLink>
+				</f:facet>
+				<p:column headerText="Fecha">
+					<h:outputLabel value="#{seg.segFecha}">
+						<f:convertDateTime pattern="yyyy-MM-dd" />
+					</h:outputLabel>
+				</p:column>
+				<p:column headerText="Estado">
+					<h:outputLabel value="#{seg.segEstado}" />
+				</p:column>
+				<p:column headerText="Lugar">
+					<h:outputLabel value="#{seg.segLugar}" />
+				</p:column>
+				<p:column headerText="Mantenimiento">
+					<h:outputLabel value="#{seg.segMantenimiento}" />
+				</p:column>
+				<p:column headerText="Lugar">
+					<h:outputLabel value="#{seg.segLugar}" />
+				</p:column>
+				<p:column headerText="Longitud">
+					<h:outputLabel value="#{seg.segLongitud}" />
+				</p:column>
+				<p:column headerText="Latitud">
+					<h:outputLabel value="#{seg.segLatitud}" />
+				</p:column>
+			</p:dataTable>
+
+		</p:dialog>
+	</ui:define>
+</ui:composition>

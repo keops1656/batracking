@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <h:head>
+        <f:facet name="first">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+            <meta name="apple-mobile-web-app-capable" content="yes" />
+        </f:facet>
+        <title>Batraking Error Interno</title>
+    </h:head>
+
+    <h:body styleClass="exception-body error-page">
+    
+        <div class="exception-top">
+            <p:graphicImage name="icon-error.png" library="img" />
+        </div>
+        
+        <div class="exception-bottom">
+            <div class="exception-wrapper">
+                <span class="exception-summary">Exception Occured</span>
+                <span class="exception-detail">Please Contact System Admin</span>
+                <p:button outcome="/inicio" value="Inicio" icon="fa fa-home" styleClass="black-btn"/>
+                <p:graphicImage name="logo-icon-white.png" library="img" styleClass="logo-icon"/>
+			<span class="exception-footer">Sistema de Gestión Backtracking
+				- Desarrollado por Ing. Marco Antonio Toscano Freire. Msc. -
+				Matoosfe</span>
+		</div>
+        </div>
+        <h:outputStylesheet name="layout-blue.css" library="css" />
+    </h:body>
+
+</html>

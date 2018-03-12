@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pp="http://primefaces.org/poseidon">
+<h:head>
+	<title>Sistema de Batracking</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<h:outputStylesheet library="css" name="batracking.css" />
+</h:head>
+<h:body styleClass="fondo">
+	<p:layout fullPage="true">
+		<p:layoutUnit position="north" size="100">
+			<h:panelGrid width="100%" columns="2">
+				<p:graphicImage name="logo-dacar.png" library="img" width="200px" height="88px"/>
+				<p:panelGrid columns="2" style="width:100%">
+					<p:outputLabel
+						value="Usuario: #{loginBean.usuario.usuNombre} #{loginBean.usuario.usuApellido} -
+							 #{loginBean.usuario.entidad.tipoEntidad.tipentNombre} -  #{loginBean.usuario.entidad.entNombre}" />
+					<p:commandButton value="Cerrar Sesión" process="@this"
+						actionListener="#{loginBean.cerrarCesion}" />
+				</p:panelGrid>
+			</h:panelGrid>
+
+		</p:layoutUnit>
+		<p:layoutUnit position="west" resizable="true" closable="true"
+			collapsible="true">
+			<h:form>
+				<p:menu model="#{loginBean.menuModel}"/>
+			</h:form>
+		</p:layoutUnit>
+		<p:layoutUnit position="center">
+			<h:form id="frmGen">
+				<ui:insert name="contenido">
+					<h:outputLabel value="Estoy en contenido" />
+				</ui:insert>
+			</h:form>
+		</p:layoutUnit>
+		<!-- <p:layoutUnit position="south">
+			<h:outputLabel
+				value="Sistema de Gestión Backtracking - Desarrollado por Ing. Marco Antonio Toscano Freire. Msc. - Matoosfe" />
+		</p:layoutUnit> -->
+	</p:layout>
+	<h:form id="frmMen">
+		<ui:insert name="mensaje">
+
+		</ui:insert>
+		<p:ajaxStatus onstart="PF('diaAja').show()"
+			onsuccess="PF('diaAja').hide()" />
+
+		<p:dialog widgetVar="diaAja" modal="true" draggable="false"
+			closable="false" resizable="false" showHeader="false">
+			<p:graphicImage library="img" name="imagenCarga.gif" />
+		</p:dialog>
+	</h:form>
+</h:body>
+</html>

@@ -1,0 +1,159 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/templates/plantilla.xhtml">
+	<ui:define name="contenido">
+		<p:growl id="menGen" />
+		<p:toolbar>
+			<f:facet name="left">
+				<p:outputLabel value="Administración de Pallet" />
+			</f:facet>
+			<f:facet name="right">
+				<p:commandButton value="Nuevo" icon="ui-icon-document"
+					process="@this" actionListener="#{palletBean.resetearFormulario}"
+					update="@form" />
+				<p:commandButton value="Guardar" icon="ui-icon-disk"
+					process="@this :frmGen:tabVieGen:panGriPal"
+					actionListener="#{palletBean.guardar}"
+					update=":frmGen:tabVieGen:panGriPal :frmGen:tabVieGen:datTabPal 
+							:frmGen:tabVieGen:datTabProPal :frmGen:menGen 
+							:frmMen:datTabPro"/>
+				<p:commandButton value="Editar" icon="ui-icon-pencil"
+					process="@this" actionListener="#{palletBean.editar}"
+					update=":frmGen:tabVieGen :frmGen:menGen" />
+				<p:commandButton value="Eliminar" icon="ui-icon-trash"
+					process="@this" onclick="PF('diaEli').show();" />
+			</f:facet>
+		</p:toolbar>
+		<br />
+		<p:tabView id="tabVieGen">
+			<p:tab title="Crear Pallet">
+				<p:panelGrid id="panGriPal" columns="5" style="width:100%">
+					<p:outputLabel for="txtCodPal" value="Código:" styleClass="etiquetaReq"/>
+					<p:inputText id="txtCodPal" value="#{palletBean.pallet.pallCodigo}"
+						required="true" style="width:200px!important" />
+					<p:outputLabel for="txaDesPal" value="Descripción:" styleClass="etiquetaReq"/>
+					<p:inputTextarea id="txaDesPal" maxlength="150" required="true"
+						value="#{palletBean.pallet.pallDescripcion}"
+						style="width:200px!important" />
+					<p:commandButton value="Seleccionar Productos"
+						onclick="PF('diaSelPro').show();" />
+				</p:panelGrid>
+				<br></br>
+				<p:dataTable id="datTabProPal"
+					value="#{palletBean.pallet.productos}" var="pro"
+					rowKey="#{pro.idProducto}" selectionMode="single">
+					<f:facet name="header">
+						<p:outputLabel value="Productos Pallet" />
+					</f:facet>
+					<p:column headerText="Fabricante" sortBy="#{pro.entidad.entNombre}">
+						<p:outputLabel value="#{pro.entidad.entNombre}" />
+					</p:column>
+					<p:column headerText="Código" sortBy="#{pro.prodCodigo}">
+						<p:outputLabel value="#{pro.prodCodigo}" />
+					</p:column>
+					<p:column headerText="Especificaciones">
+						<p:outputLabel value="#{pro.prodEspecificaciones}" />
+					</p:column>
+					<p:column headerText="Estado" sortBy="#{pro.prodEstadoBateria}">
+						<p:outputLabel value="#{pro.prodEstadoBateria}" />
+					</p:column>
+					<p:column headerText="Eliminar">
+						<p:commandButton icon="ui-icon-trash" process="@this"
+							actionListener="#{palletBean.eliminarProductoPallet(pro)}"
+							update=":frmGen:tabVieGen:datTabProPal" />
+					</p:column>
+				</p:dataTable>
+			</p:tab>
+			<p:tab title="Listar Pallet">
+				<p:dataTable id="datTabPal" value="#{palletBean.listaPallet}"
+					var="pal" rowKey="#{pal.idPallet}" selectionMode="single"
+					paginator="true" rows="10">
+					<f:facet name="header">
+						<p:outputLabel value="Lista de Pallets" />
+					</f:facet>
+					<p:ajax event="rowSelect"
+						listener="#{palletBean.seleccionarPallet}" />
+					<p:column headerText="Código">
+						<p:outputLabel value="#{pal.pallCodigo}" />
+					</p:column>
+					<p:column headerText="Descripción">
+						<p:outputLabel value="#{pal.pallDescripcion}" />
+					</p:column>
+				</p:dataTable>
+			</p:tab>
+		</p:tabView>
+
+	</ui:define>
+	<ui:define name="mensaje">
+		<p:dialog widgetVar="diaSelPro" height="500" width="852"
+			header="Seleccionar Productos" modal="true">
+			<p:panelGrid id="panGriBusPro" columns="7">
+				<p:outputLabel value="Semilla:" />
+				<p:inputText value="#{palletBean.semillaBus}"
+					style="width:80px!required;" />
+				<p:outputLabel value="Inicio:" />
+				<p:spinner value="#{palletBean.valorInicioBus}" stepFactor="1" />
+				<p:outputLabel value="Fin:" />
+				<p:spinner value="#{palletBean.valorFinBus}" stepFactor="1" />
+				<p:commandButton icon="ui-icon-search"
+					process="@this :frmMen:panGriBusPro"
+					actionListener="#{palletBean.buscarProductos}"
+					update=":frmMen:datTabPro :frmGen:menGen" />
+			</p:panelGrid>
+			<br></br>
+			<br></br>
+			<center>
+				<p:dataTable id="datTabPro"
+					value="#{palletBean.listaProductosSinPal}" var="prod"
+					rowKey="#{prod.idProducto}" paginator="true" scrollable="true"
+					selection="#{palletBean.listaProductosSel}"
+					rowSelectMode="checkbox">
+					<f:facet name="header">
+						<p:outputLabel value="Productos Sin Pallet" />
+					</f:facet>
+					<p:ajax event="toggleSelect" />
+					<p:ajax event="rowSelectCheckbox" />
+					<p:ajax event="rowUnselectCheckbox" />
+					<p:column selectionMode="multiple"
+						style="width:16px;text-align:center" />
+					<p:column headerText="Fabricante"
+						sortBy="#{prod.entidad.entNombre}">
+						<p:outputLabel value="#{prod.entidad.entNombre}" />
+					</p:column>
+					<p:column headerText="Código" sortBy="#{prod.prodCodigo}"
+						filterBy="#{prod.prodCodigo}">
+						<p:outputLabel value="#{prod.prodCodigo}" />
+					</p:column>
+					<p:column headerText="Especificaciones">
+						<p:outputLabel value="#{prod.prodEspecificaciones}" />
+					</p:column>
+					<p:column headerText="Estado" sortBy="#{prod.prodEstadoBateria}">
+						<p:outputLabel value="#{prod.prodEstadoBateria}" />
+					</p:column>
+					<p:column headerText="Fecha Producción">
+						<p:outputLabel value="#{prod.prodFechaProduccion}">
+							<f:convertDateTime pattern="yyyy-MM-dd" />
+						</p:outputLabel>
+					</p:column>
+				</p:dataTable>
+				<br></br>
+				<p:commandButton value="Procesar" process="@this"
+					actionListener="#{palletBean.procesarProductosPallet}"
+					update=":frmGen:tabVieGen:datTabProPal :frmMen:panGriBusPro :frmMen:datTabPro"
+					oncomplete="PF('diaSelPro').hide()" />
+			</center>
+		</p:dialog>
+
+		<p:confirmDialog widgetVar="diaEli" width="300" height="80"
+			message="Esta seguro de eliminar el registro?" header="Confirmación">
+			<p:commandButton value="Si" process="@this"
+				actionListener="#{palletBean.eliminar}"
+				update=":frmGen:tabVieGen:datTabPal :frmGen:menGen"
+				oncomplete="PF('diaEli').hide();" />
+			<p:commandButton value="No" onclick="PF('diaEli').hide();" />
+		</p:confirmDialog>
+	</ui:define>
+</ui:composition>

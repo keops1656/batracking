@@ -1,0 +1,84 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/templates/plantilla.xhtml">
+	<ui:define name="contenido">
+		<p:growl id="menGen" />
+		<p:toolbar>
+			<f:facet name="left">
+				<p:outputLabel value="Relación Entidades" />
+			</f:facet>
+			<f:facet name="right">
+				<p:commandButton value="Nuevo" icon="ui-icon-document"
+					process="@this"
+					actionListener="#{relacionEntidadBean.resetearFormulario}"
+					update="@form" />
+				<p:commandButton id="btnGua" value="Guardar" icon="ui-icon-disk"
+					process="@this :frmGen:panGriRelEnt :frmGen:panGriRelEntPad"
+					actionListener="#{relacionEntidadBean.guardar}"
+					update=":frmGen:panGriRelEnt :frmGen:panGriRelEntPad :frmGen:lblEntPad :frmGen:treEnt :frmGen:menGen" />
+			</f:facet>
+		</p:toolbar>
+		<br />
+		<p:panelGrid columns="1" style="width:100%">
+			<h:panelGrid id="panGriRelEnt" columns="6" width="100%">
+				<p:outputLabel for="cmbTipEnt" value="Tipo Entidad:"
+					styleClass="etiquetaReq" />
+				<p:selectOneMenu id="cmbTipEnt" effect="drop"
+					value="#{relacionEntidadBean.idTipEnt}"
+					style="width:200px!important" required="true">
+					<f:selectItem itemLabel="Seleccione una opción" itemValue=""
+						noSelectionOption="true" />
+					<f:selectItems value="#{relacionEntidadBean.listaTipoEntidades}" />
+					<p:ajax event="change"
+						listener="#{relacionEntidadBean.cargarTipoEntPadre}"
+						update=":frmGen:cmbEnt :frmGen:lblEnt :frmGen:cmbEntPad :frmGen:selManChkEntPad 
+						        :frmGen:lblEntPad :frmGen:treEnt :frmGen:menGen" />
+				</p:selectOneMenu>
+				<p:outputLabel id="lblEnt" for="cmbEnt" styleClass="etiquetaReq"
+					value="#{relacionEntidadBean.labelEntidad}" />
+				<p:selectOneMenu id="cmbEnt" effect="drop" required="true"
+					value="#{relacionEntidadBean.idEnt}" style="width:200px!important"
+					filter="true" filterMatchMode="contains">
+					<f:selectItem itemLabel="Seleccione una opción" itemValue=""
+						noSelectionOption="true" />
+					<f:selectItems value="#{relacionEntidadBean.listaEntidades}" />
+					<p:ajax listener="#{relacionEntidadBean.cargarArbolEntidades}"
+						update=":frmGen:treEnt" />
+				</p:selectOneMenu>
+				<p:outputLabel for="cmbEntPad" value="Entidad Padre:"
+					styleClass="etiquetaReq" />
+				<p:selectOneMenu id="cmbEntPad" effect="drop"
+					value="#{relacionEntidadBean.idTipEntPad}"
+					style="width:200px!important" required="true">
+					<f:selectItem itemLabel="Seleccione una opción" itemValue=""
+						noSelectionOption="true" />
+					<f:selectItems
+						value="#{relacionEntidadBean.listaTipoEntidadesPadre}" />
+					<p:ajax event="change" process="@this :frmGen:cmbEnt"
+						listener="#{relacionEntidadBean.cargarEntidadesPadre}"
+						update=":frmGen:lblEnt :frmGen:selManChkEntPad :frmGen:lblEntPad
+						        :frmGen:btnGua" />
+				</p:selectOneMenu>
+			</h:panelGrid>
+			<h:panelGrid id="panGriRelEntPad" columns="1">
+				<p:outputLabel id="lblEntPad" styleClass="etiquetaReq"
+					value="#{relacionEntidadBean.labelEntidadPadre}" />
+				<p:selectManyCheckbox id="selManChkEntPad"
+					value="#{relacionEntidadBean.entidadesPadreSel}" layout="grid"
+					columns="8">
+					<f:selectItems value="#{relacionEntidadBean.listaEntidadesPadre}" />
+				</p:selectManyCheckbox>
+			</h:panelGrid>
+		</p:panelGrid>
+		<br />
+		<p:tree id="treEnt" value="#{relacionEntidadBean.root}" var="ent"
+			dynamic="true" orientation="horizontal">
+			<p:treeNode>
+				<h:outputText value="#{ent}" />
+			</p:treeNode>
+		</p:tree>
+	</ui:define>
+</ui:composition>

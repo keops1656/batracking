@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1"
+	xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+	<persistence-unit name="batrackingPU"
+		transaction-type="JTA">
+		<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+		<jta-data-source>java:jboss/batrackingDS</jta-data-source>
+		<class>com.matoosfe.batracking.modelo.Usuario</class>
+		<class>com.matoosfe.batracking.modelo.Entidad</class>
+		<class>com.matoosfe.batracking.modelo.Producto</class>
+		<class>com.matoosfe.batracking.modelo.TipoEntidad</class>
+		<class>com.matoosfe.batracking.modelo.Seguimiento</class>
+		<class>com.matoosfe.batracking.modelo.Pallet</class>
+		<class>com.matoosfe.batracking.modelo.FotografiasSeguimiento</class>
+		<class>com.matoosfe.batracking.modelo.ComentarioSeguimiento</class>
+		<class>com.matoosfe.batracking.modelo.ClienteFinal</class>
+		<class>com.matoosfe.batracking.modelo.Parametro</class>
+		<class>com.matoosfe.batracking.modelo.RelacionEntidad</class>
+		<class>com.matoosfe.batracking.modelo.TipoBateria</class>
+	</persistence-unit>
+</persistence>

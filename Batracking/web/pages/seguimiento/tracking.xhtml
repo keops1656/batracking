@@ -1,0 +1,217 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/templates/plantilla.xhtml">
+	<ui:define name="contenido">
+		<p:growl id="menGen" />
+		<p:toolbar>
+			<f:facet name="left">
+				<p:outputLabel value="Tracking Producto" />
+			</f:facet>
+			<f:facet name="right">
+				<p:commandButton value="Nuevo" icon="ui-icon-document"
+					process="@this :frmGen:tabVieGen:datTabPro :frmGen:tabVieGen:datTabSeg"
+					actionListener="#{trackingBean.resetearFormulario}" update="@form"
+					onstart="PF('widDatTabPro').clearSelection(); PF('widDatTabSeg').clearSelection() " />
+				<p:commandButton value="Guardar" icon="ui-icon-disk"
+					process="@this :frmGen:tabVieGen:acoPanVieGenTra:panGriLug :frmGen:tabVieGen:acoPanVieGenTra:panGriRefPro"
+					actionListener="#{trackingBean.guardar}"
+					update=":frmGen:tabVieGen :frmGen:menGen" />
+				<p:separator />
+				<p:commandButton value="Devolver"
+					icon="ui-icon-arrowreturnthick-1-w" onclick="PF('diaDev').show();" />
+			</f:facet>
+		</p:toolbar>
+		<br />
+		<p:tabView id="tabVieGen">
+			<p:tab title="Revisar Tracking">
+				<p:panelGrid id="panGriBusPro" style="width:100%" columns="3">
+					<p:outputLabel for="txtBus" value="Código/Especificación:" />
+					<p:inputText id="txtBus" value="#{trackingBean.valBusPro}" />
+					<p:commandButton icon="ui-icon-search" value="Buscar"
+						process="@this :frmGen:tabVieGen:panGriBusPro"
+						actionListener="#{trackingBean.buscarProductos}"
+						update=":frmGen:tabVieGen:datTabPro" />
+				</p:panelGrid>
+				<h:panelGrid columns="2" width="100%">
+					<p:dataTable id="datTabPro" value="#{trackingBean.listaProductos}"
+						var="pro" rowKey="#{pro.prodCodigo}" paginator="true" rows="10"
+						selectionMode="single" widgetVar="widDatTabPro"
+						emptyMessage="Ningún registro encontrado">
+						<f:facet name="header">
+							<p:outputLabel value="Lista Productos" />
+						</f:facet>
+						<p:ajax event="rowSelect"
+							listener="#{trackingBean.seleccionarProducto}"
+							update=":frmGen:tabVieGen:datTabSeg :frmGen:tabVieGen:acoPanVieGenTra:panGriRefPro" />
+						<p:column headerText="Fábrica:" sortBy="#{pro.entidad.entNombre}"
+							filterBy="#{pro.entidad.entNombre}">
+							<p:outputLabel value="#{pro.entidad.entNombre}" />
+						</p:column>
+						<p:column headerText="Producto" sortBy="#{pro.prodCodigo} ">
+							<p:outputLabel value="#{pro.prodCodigo}" />
+						</p:column>
+						<p:column headerText="Especificación"
+							sortBy="#{pro.prodEspecificaciones} ">
+							<p:outputLabel value="#{pro.prodCodigo}" />
+						</p:column>
+						<p:column headerText="Fecha Producción"
+							sortBy="#{pro.prodFechaProduccion}">
+							<p:outputLabel value="#{pro.prodFechaProduccion}">
+								<f:convertDateTime pattern="yyyy-MM-dd" />
+							</p:outputLabel>
+						</p:column>
+					</p:dataTable>
+					<p:dataTable id="datTabSeg" widgetVar="widDatTabSeg"
+						value="#{trackingBean.listaSeguimiento}" var="seg"
+						rowKey="#{seg.idSeguimiento}" paginator="true" rows="10"
+						rowStyleClass="#{seg.segActual == 1 ? 'filaSeleccionada' : null}"
+						selectionMode="single" emptyMessage="Ningún registro encontrado">
+						<f:facet name="header">
+							<p:outputLabel value="Tracking Producto" />
+						</f:facet>
+						<p:ajax event="rowSelect"
+							listener="#{trackingBean.seleccionarTracking}" />
+						<p:column headerText="Fecha Tracking" sortBy="#{seg.segFecha}">
+							<p:outputLabel value="#{seg.segFecha}">
+								<f:convertDateTime pattern="yyyy-MM-dd" locale="es"
+									timeZone="#{trackingBean.timezone}" />
+							</p:outputLabel>
+						</p:column>
+						<p:column headerText="Estado" sortBy="#{seg.segEstado}"
+							filterBy="#{seg.segEstado}">
+							<p:outputLabel value="#{seg.segEstado}" />
+						</p:column>
+						<p:column headerText="Vida Útil" sortBy="#{seg.segVidaUtil} ">
+							<p:outputLabel value="#{seg.segVidaUtil}" />
+						</p:column>
+						<p:column headerText="Mantenimiento"
+							sortBy="#{seg.segMantenimiento} ">
+							<p:outputLabel value="#{seg.segMantenimiento}" />
+						</p:column>
+
+					</p:dataTable>
+				</h:panelGrid>
+			</p:tab>
+			<p:tab title="Añadir Tracking">
+				<p:accordionPanel id="acoPanVieGenTra">
+					<p:tab title="General">
+						<p:panelGrid id="panGriLug" columns="6" style="width:100%">
+							<p:outputLabel for="txtLugar" value="Lugar:" />
+							<p:inputText id="txtLugar" required="true"
+								value="#{trackingBean.seguimiento.segLugar}" />
+							<p:outputLabel for="txtLatSeg" value="Latitud:" />
+							<p:inputText id="txtLatSeg"
+								value="#{trackingBean.seguimiento.segLatitud}" />
+							<p:outputLabel for="txtLonSeg" value="Latitud:" />
+							<p:inputText id="txtLonSeg"
+								value="#{trackingBean.seguimiento.segLongitud}" />
+						</p:panelGrid>
+					</p:tab>
+					<p:tab title="Comentarios">
+						<p:toolbar>
+							<f:facet name="right">
+								<p:commandButton value="Añadir" icon="ui-icon-plus"
+									process="@this :frmGen:tabVieGen:acoPanVieGenTra:txaComTra"
+									actionListener="#{trackingBean.anadirComentario}"
+									update=":frmGen:tabVieGen:acoPanVieGenTra:datTabCom :frmGen:tabVieGen:acoPanVieGenTra:txaComTra
+											:frmGen:menGen" />
+								<p:commandButton value="Eliminar" icon="ui-icon-trash"
+									process="@this"
+									actionListener="#{trackingBean.eliminarComentario}"
+									update=":frmGen:tabVieGen:acoPanVieGenTra:datTabCom" />
+							</f:facet>
+						</p:toolbar>
+						<p:panelGrid id="panGriCom" columns="2" style="width:100%">
+							<p:outputLabel for="txaComTra" value="Comentario" />
+							<p:inputTextarea id="txaComTra" style="width:600px"
+								value="#{trackingBean.comentario.osegDescripcion}"
+								maxlength="150" rows="2" required="true" />
+						</p:panelGrid>
+						<br></br>
+						<p:dataTable id="datTabCom"
+							value="#{trackingBean.listaComentarios}" var="com"
+							rowKey="#{com.idTmp}" paginator="true" rows="10"
+							selectionMode="single" emptyMessage="Ningún registro encontrado">
+							<f:facet name="header">
+								<p:outputLabel value="Lista Comentarios" />
+							</f:facet>
+							<p:ajax event="rowSelect"
+								listener="#{trackingBean.seleccionarComentario}" />
+							<p:column headerText="Comentario">
+								<p:outputLabel value="#{com.osegDescripcion}" />
+							</p:column>
+						</p:dataTable>
+					</p:tab>
+					<p:tab title="Fotografía:">
+						<p:panelGrid id="panGriFot" columns="2" style="width:100%">
+							<p:commandButton process="@this" value="Fotografía:"
+								onclick="PF('diaAneFot').show();" />
+							<p:dataTable id="datTabFot"
+								value="#{trackingBean.listaFotografias}" var="fot"
+								rowKey="#{fot.idTmp}" paginator="true" rows="10"
+								emptyMessage="Ningún registro encontrado">
+								<f:facet name="header">
+									<p:outputLabel value="Lista Fotografias" />
+								</f:facet>
+								<p:column headerText="Fotografia">
+									<p:outputLabel value="#{fot.fsegNombre}" />
+								</p:column>
+								<p:column headerText="Operaciones">
+									<p:commandButton ajax="false" title="Descargar"
+										immediate="true"
+										onclick="PrimeFaces.monitorDownload(start, stop);"
+										icon="ui-icon-arrowthick-1-s"
+										actionListener="#{trackingBean.procesarDescarga(fot)}">
+										<p:fileDownload value="#{trackingBean.fotoDescarga}" />
+									</p:commandButton>
+									<p:commandButton icon="ui-icon-trash" process="@this"
+										title="Eliminar"
+										actionListener="#{trackingBean.eliminarFotografia(fot)}"
+										update=":frmGen:tabVieGen:acoPanVieGenTra:datTabFot" />
+								</p:column>
+							</p:dataTable>
+						</p:panelGrid>
+					</p:tab>
+					<p:tab title="Refrescar Producto">
+						<p:panelGrid id="panGriRefPro" columns="6" style="width:100%">
+							<p:outputLabel for="selBolActRef" value="Refrescar:" />
+							<p:selectBooleanCheckbox id="selBolActRef"
+								value="#{trackingBean.refrescar}" />
+							<p:outputLabel for="txtTipBat" value="TipoBateria:" />
+							<p:inputText id="txtTipBat" readonly="true"
+								value="#{trackingBean.tipoBateria}" />
+						</p:panelGrid>
+					</p:tab>
+				</p:accordionPanel>
+				<p:dialog widgetVar="diaAneFot" width="465" height="200"
+					header="Cargar Fotografía:">
+					<p:panelGrid columns="2" style="width:100%">
+						<p:outputLabel value="Archivo:" />
+						<p:fileUpload uploadLabel="Subir" cancelLabel="Cancelar"
+							allowTypes="/(\.|\/)(jpe?g|png)$/" sizeLimit="4000000"
+							fileUploadListener="#{trackingBean.subirArchivo}"
+							oncomplete="PF('diaAneFot').hide();"
+							update=":frmGen:tabVieGen:acoPanVieGenTra:datTabFot :frmGen:menGen"
+							label="Seleccionar"
+							invalidFileMessage="Archivo inválido, solo se soportan los tipos:jpg, png"
+							invalidSizeMessage="Tamaño inválido:4MB" />
+					</p:panelGrid>
+				</p:dialog>
+			</p:tab>
+		</p:tabView>
+	</ui:define>
+	<ui:define name="mensaje">
+		<p:confirmDialog widgetVar="diaDev" width="300" height="80"
+			message="Esta seguro de devolver el tracking?" header="Confirmación">
+			<p:commandButton value="Si" process="@this"
+				actionListener="#{trackingBean.devolver}"
+				update=":frmGen:tabVieGen:datTabSeg :frmGen:menGen"
+				oncomplete="PF('diaDev').hide();" />
+			<p:commandButton value="No" onclick="PF('diaDev').hide();" />
+		</p:confirmDialog>
+
+	</ui:define>
+</ui:composition>

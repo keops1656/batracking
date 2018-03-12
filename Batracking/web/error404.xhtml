@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<f:facet name="first">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="viewport"
+			content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+	</f:facet>
+	<title>Batraking Error - Recurso no encontrado</title>
+	<h:outputStylesheet name="batracking.css" library="css" />
+</h:head>
+
+<h:body styleClass="exception-body notfound-page">
+
+	<div class="exception-top" style="text-align: center;">
+		<p:graphicImage name="icon-404.png" library="img" />
+	</div>
+
+	<div class="exception-bottom">
+		<div class="exception-wrapper">
+			<span class="exception-summary">Recurso no encontrado</span> <span
+				class="exception-detail">El recurso que se está accediendo no
+				existe</span>
+			<p:button outcome="/inicio" value="Inicio" icon="fa fa-home"
+				styleClass="turquoise-btn" />
+			<br />
+			<br />
+			<br />
+			<span class="exception-footer">Sistema de Gestión Backtracking
+				- Desarrollado por Ing. Marco Antonio Toscano Freire. Msc. -
+				Matoosfe</span>
+		</div>
+	</div>
+
+</h:body>
+
+</html>

@@ -1,0 +1,51 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/templates/plantilla.xhtml">
+	<ui:define name="contenido">
+	<p:growl id="menGen" />
+		<p:toolbar>
+			<f:facet name="left">
+				<p:outputLabel value="Reporte Codigos QR" />
+			</f:facet>
+			<f:facet name="right">
+				<p:commandButton value="Nuevo" icon="ui-icon-document"
+					process="@this"
+					actionListener="#{repCodigosBean.resetearFormulario}"
+					update="@form" />
+			</f:facet>
+		</p:toolbar>
+		<br/>
+
+		<p:panelGrid id="panGriPro" columns="4" style="width:100%">
+			<p:outputLabel value="Tipo Entidad:" styleClass="etiquetaReq" />
+			<p:selectOneMenu id="cmbTipEnt" effect="drop" required="true"
+				value="#{repCodigosBean.idTipEnt}" style="width:200px!important">
+				<f:selectItem itemLabel="Seleccione una opción" itemValue=""
+					noSelectionOption="true" />
+				<f:selectItems value="#{repCodigosBean.listaTipoEntidades}" />
+				<p:ajax event="change"
+					listener="#{repCodigosBean.cargarEntidadesPadre}"
+					update=":frmGen:cmbEnt" />
+			</p:selectOneMenu>
+			<p:outputLabel value="Entidad:" styleClass="etiquetaReq" />
+			<p:selectOneMenu id="cmbEnt" effect="drop" required="true"
+				value="#{repCodigosBean.idEnt}" style="width:200px!important">
+				<f:selectItem itemLabel="Seleccione una opción" itemValue=""
+					noSelectionOption="true" />
+				<f:selectItems value="#{repCodigosBean.listaEntidades}" />
+			</p:selectOneMenu>
+		</p:panelGrid>
+
+		<br/>				
+        <h:panelGrid columns="1">
+            <h:commandLink id="repId" 
+                           actionListener="#{repCodigosBean.verReporte()}"
+                           target="_blank" >
+				<p:commandButton value="Ver" icon="ui-icon-print" title="Ver Qr"/>
+            </h:commandLink>  
+        </h:panelGrid> 
+	</ui:define>
+</ui:composition>	

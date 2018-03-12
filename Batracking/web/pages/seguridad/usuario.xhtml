@@ -1,0 +1,105 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/templates/plantilla.xhtml">
+	<ui:define name="contenido">
+		<p:growl id="menGen" />
+		<p:toolbar>
+			<f:facet name="left">
+				<p:outputLabel value="Administración de Usuarios"/>
+			</f:facet>
+			<f:facet name="right">
+				<p:commandButton value="Nuevo" icon="ui-icon-document"
+					process="@this" actionListener="#{usuarioBean.resetearFormulario}"
+					update="@form" />
+				<p:commandButton value="Guardar" icon="ui-icon-disk"
+					process="@this :frmGen:panGriUsu"
+					actionListener="#{usuarioBean.guardar}"
+					update=":frmGen:panGriUsu :frmGen:datTabUsu :frmGen:menGen" />
+				<p:commandButton value="Editar" icon="ui-icon-pencil"
+					process="@this" actionListener="#{usuarioBean.editar}"
+					update=":frmGen:panGriUsu :frmGen:menGen" />
+				<p:commandButton value="Eliminar" icon="ui-icon-trash"
+					onclick="PF('diaEli').show();" />
+			</f:facet>
+		</p:toolbar>
+		<br />
+		<p:panelGrid id="panGriUsu" columns="6" style="width:100%">
+			<p:outputLabel for="cmbTipEnt" value="Tipo Entidad:" styleClass="etiquetaReq"/>
+			<p:selectOneMenu id="cmbTipEnt" effect="drop" required="true"
+				value="#{usuarioBean.idTipEnt}" style="width:200px!important">
+				<f:selectItem itemLabel="Seleccione una opción" itemValue=""
+					noSelectionOption="true" />
+				<f:selectItems value="#{usuarioBean.listaTipoEntidades}" />
+				<p:ajax event="change"
+					listener="#{usuarioBean.cargarEntidadesPadre}"
+					update=":frmGen:cmbEnt" />
+			</p:selectOneMenu>
+			<p:outputLabel id="lblEntPad" for="cmbEnt" value="Entidad:" styleClass="etiquetaReq"/>
+			<p:selectOneMenu id="cmbEnt" effect="drop" required="true"
+				value="#{usuarioBean.idEnt}" style="width:200px!important">
+				<f:selectItem itemLabel="Seleccione una opción" itemValue=""
+					noSelectionOption="true" />
+				<f:selectItems value="#{usuarioBean.listaEntidades}" />
+			</p:selectOneMenu>
+			<p:outputLabel for="txtNomUsu" value="Nombre:" styleClass="etiquetaReq"/>
+			<p:inputText id="txtNomUsu" value="#{usuarioBean.usuario.usuNombre}"
+				required="true" style="width:200px!important" />
+			<p:outputLabel for="txtApeUsu" value="Apellido:" styleClass="etiquetaReq"/>
+			<p:inputText id="txtApeUsu"
+				value="#{usuarioBean.usuario.usuApellido}" required="true"
+				style="width:200px!important" />
+			<p:outputLabel for="txtLogUsu" value="Login:" styleClass="etiquetaReq"/>
+			<p:inputText id="txtLogUsu" value="#{usuarioBean.usuario.usuLogin}"
+				required="true" style="width:200px!important" maxlength="10"/>
+			<p:outputLabel for="txtClaUsu" value="Clave:" styleClass="etiquetaReq"/>
+			<p:inputText id="txtClaUsu"
+				value="#{usuarioBean.usuario.usuPassword}" required="true"
+				style="width:200px!important" maxlength="10"/>
+			<p:outputLabel for="txtCorUsu" value="Correo:" styleClass="etiquetaReq"/>
+			<p:inputText id="txtCorUsu" value="#{usuarioBean.usuario.usuCorreo}"
+				required="true" style="width:200px!important"/>
+		</p:panelGrid>
+		<br />
+		<p:dataTable id="datTabUsu" value="#{usuarioBean.listaUsuarios}"
+			var="usu" rowKey="#{usu.idUsuario}" selectionMode="single"
+			paginator="true" rows="10">
+			<f:facet name="header">
+				<p:outputLabel value="Lista de Usuarios" />
+			</f:facet>
+			<p:ajax event="rowSelect"
+				listener="#{usuarioBean.selecccionarRegistro}" />
+			<p:column headerText="Tipo Entidad"
+				sortBy="#{usu.entidad.tipoEntidad.tipentNombre}">
+				<p:outputLabel value="#{usu.entidad.tipoEntidad.tipentNombre}" />
+			</p:column>
+			<p:column headerText="Entidad" sortBy="#{usu.entidad.entNombre}">
+				<p:outputLabel value="#{usu.entidad.entNombre}" />
+			</p:column>
+			<p:column headerText="Nombre" sortBy="#{usu.usuNombre}">
+				<p:outputLabel value="#{usu.usuNombre}" />
+			</p:column>
+			<p:column headerText="Apellido" sortBy="#{usu.usuApellido}">
+				<p:outputLabel value="#{usu.usuApellido}" />
+			</p:column>
+			<p:column headerText="Login" sortBy="#{usu.usuLogin}">
+				<p:outputLabel value="#{usu.usuLogin}" />
+			</p:column>
+			<p:column headerText="Correo" sortBy="#{usu.usuCorreo}">
+				<p:outputLabel value="#{usu.usuCorreo}" />
+			</p:column>
+		</p:dataTable>
+	</ui:define>
+	<ui:define name="mensaje">
+		<p:confirmDialog widgetVar="diaEli" width="300" height="80"
+			message="Esta seguro de eliminar el registro?" header="Confirmación">
+			<p:commandButton value="Si" process="@this"
+				actionListener="#{usuarioBean.eliminar}"
+				update=":frmGen:datTabUsu :frmGen:menGen"
+				oncomplete="PF('diaEli').hide();" />
+			<p:commandButton value="No" onclick="PF('diaEli').hide();" />
+		</p:confirmDialog>
+	</ui:define>
+</ui:composition>

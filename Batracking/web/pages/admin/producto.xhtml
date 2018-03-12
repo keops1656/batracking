@@ -1,0 +1,156 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/templates/plantilla.xhtml">
+	<ui:define name="contenido">
+		<p:growl id="menGen" />
+		<p:toolbar>
+			<f:facet name="left">
+				<p:outputLabel value="Administración de Productos" />
+			</f:facet>
+			<f:facet name="right">
+				<p:commandButton value="Nuevo" icon="ui-icon-document"
+					process="@this" actionListener="#{productoBean.resetearFormulario}"
+					update="@form" />
+				<p:commandButton value="Guardar" icon="ui-icon-disk"
+					process="@this :frmGen:panGriPro"
+					actionListener="#{productoBean.guardar}"
+					update=":frmGen:panGriPro :frmGen:datTabPro :frmGen:menGen" />
+				<p:commandButton value="Editar" icon="ui-icon-pencil"
+					process="@this" actionListener="#{productoBean.editar}"
+					update=":frmGen:panGriPro :frmGen:menGen" />
+				<p:commandButton value="Eliminar" icon="ui-icon-trash"
+					onclick="PF('diaEli').show();" />
+				<span class="ui-separator"> <span
+					class="ui-icon ui-icon-grip-dotted-vertical" />
+				</span>
+				<p:commandButton value="Lotes" icon="ui-icon-calculator"
+					onclick="PF('diaLot').show();" />
+			</f:facet>
+		</p:toolbar>
+		<br />
+		<p:panelGrid id="panGriPro" columns="4" style="width:100%">
+			<p:outputLabel for="cmbFab" value="Fabricante:"
+				styleClass="etiquetaReq" />
+			<p:selectOneMenu id="cmbFab" effect="drop"
+				style="width:200px!important" value="#{productoBean.idFab}"
+				required="true" filter="true" filterMatchMode="contains">
+				<f:selectItem itemLabel="Seleccione una opción" itemValue=""
+					noSelectionOption="true" />
+				<f:selectItems value="#{productoBean.listaFabricante}" />
+			</p:selectOneMenu>
+			<p:outputLabel for="txtCod" value="Código:" styleClass="etiquetaReq" />
+			<p:inputText id="txtCod" value="#{productoBean.producto.prodCodigo}"
+				required="true" style="width:200px!important" />
+			<p:outputLabel for="txtMod" value="Especificaciones:"
+				styleClass="etiquetaReq" />
+			<p:inputText id="txtMod" cols="50" style="width:200px!important"
+				value="#{productoBean.producto.prodEspecificaciones}"
+				required="true" />
+			<p:outputLabel for="calFecPro" value="Fecha Producción:"
+				styleClass="etiquetaReq" />
+			<p:calendar id="calFecPro" placeholder="yyyy-MM-dd"
+				value="#{productoBean.producto.prodFechaProduccion}"
+				pattern="yyyy-MM-dd" required="true" style="width:200px!important" />
+			<p:outputLabel for="cmbParPro" value="Parametrización:"
+				styleClass="etiquetaReq" />
+			<p:selectOneMenu id="cmbParPro" effect="drop"
+				style="width:200px!important" value="#{productoBean.idPara}"
+				required="true" filter="true" filterMatchMode="contains">
+				<f:selectItem itemLabel="Seleccione una opción" itemValue=""
+					noSelectionOption="true" />
+				<f:selectItems value="#{productoBean.listaParametrizacion}" />
+			</p:selectOneMenu>
+			<p:outputLabel for="cmbTipFab" value="Tipo Bateria:"
+				styleClass="etiquetaReq" />
+			<p:selectOneMenu id="cmbTipFab" effect="drop"
+				style="width:200px!important" value="#{productoBean.idTipBat}"
+				required="true" filter="true" filterMatchMode="contains">
+				<f:selectItem itemLabel="Seleccione una opción" itemValue=""
+					noSelectionOption="true" />
+				<f:selectItems value="#{productoBean.listaTipoBaterias}" />
+			</p:selectOneMenu>	
+		</p:panelGrid>
+		<br />
+		<p:dataTable id="datTabPro" value="#{productoBean.listaProductos}"
+			var="prod" rowKey="#{prod.prodCodigo}" selectionMode="single"
+			paginator="true" rows="10">
+			<f:facet name="header">
+				<p:outputLabel value="Lista de Productos" />
+			</f:facet>
+			<p:ajax event="rowSelect"
+				listener="#{productoBean.seleccionarRegistro}" />
+			<p:column headerText="Fabricante" sortBy="#{prod.entidad.entNombre}">
+				<p:outputLabel value="#{prod.entidad.entNombre}" />
+			</p:column>
+			<p:column headerText="Tipo Bateria" sortBy="#{prod.tipoBateria.tipbatNombre}">
+				<p:outputLabel value="#{prod.tipoBateria.tipbatNombre}" />
+			</p:column>
+			<p:column headerText="Código" sortBy="#{prod.prodCodigo}">
+				<p:outputLabel value="#{prod.prodCodigo}" />
+			</p:column>
+			<p:column headerText="Especificaciones">
+				<p:outputLabel value="#{prod.prodEspecificaciones}" />
+			</p:column>
+			<p:column headerText="Estado" sortBy="#{prod.prodEstadoBateria}">
+				<p:outputLabel value="#{prod.prodEstadoBateria}" />
+			</p:column>
+			<p:column headerText="Fecha Producción">
+				<p:outputLabel value="#{prod.prodFechaProduccion}">
+					<f:convertDateTime pattern="yyyy-MM-dd" />
+				</p:outputLabel>
+			</p:column>
+		</p:dataTable>
+	</ui:define>
+	<ui:define name="mensaje">
+		<p:confirmDialog widgetVar="diaEli" width="300" height="80"
+			message="Esta seguro de eliminar el registro?" header="Confirmación">
+			<p:commandButton value="Si" process="@this"
+				actionListener="#{productoBean.eliminar}"
+				update=":frmGen:datTabPro :frmGen:menGen"
+				oncomplete="PF('diaEli').hide();" />
+			<p:commandButton value="No" onclick="PF('diaEli').hide();" />
+		</p:confirmDialog>
+
+		<p:dialog widgetVar="diaLot" modal="true" header="Ingresar Lote Producción"
+			width="412" height="382">
+			<p:panelGrid id="panGriProLot" columns="2">
+				<p:outputLabel for="cmbFabLot" value="Fabricante:" styleClass="etiquetaReq"/>
+				<p:selectOneMenu id="cmbFabLot" effect="drop"
+					value="#{productoBean.idFabLot}" required="true"
+					requiredMessage="Fabricante requerido">
+					<f:selectItem itemLabel="Seleccione una opción" itemValue=""
+						noSelectionOption="true" />
+					<f:selectItems value="#{productoBean.listaFabricante}" />
+				</p:selectOneMenu>
+				<p:outputLabel for="txtSemLot" value="Semilla Código:" styleClass="etiquetaReq"/>
+				<p:inputText id="txtSemLot" value="#{productoBean.semillaLot}" />
+				<p:outputLabel for="spiSemIniLot" value="Inicio Código:" styleClass="etiquetaReq"/>
+				<p:spinner id="spiSemIniLot" value="#{productoBean.inicioCodLot}" required="true"/>
+				<p:outputLabel for="spiSemFinLot" value="Fin Código:" styleClass="etiquetaReq"/>
+				<p:spinner id="spiSemFinLot" value="#{productoBean.finCodLot}" required="true"/>
+				<p:outputLabel for="txtModLot" value="Modelo:" styleClass="etiquetaReq"/>
+				<p:inputText id="txtModLot" value="#{productoBean.modeloLot}" required="true"/>
+				<p:outputLabel for="calFecProLot" value="Fecha Producción:" styleClass="etiquetaReq"/>
+				<p:calendar id="calFecProLot" pattern="yyyy-MM-dd" value="#{productoBean.fechaProLot}"
+					required="true"/>
+				<p:outputLabel for="cmbParProLot" value="Parametrización:"
+					styleClass="etiquetaReq" />
+				<p:selectOneMenu id="cmbParProLot" effect="drop"
+					style="width:200px!important" value="#{productoBean.idParaLot}"
+					required="true" filter="true" filterMatchMode="contains">
+					<f:selectItem itemLabel="Seleccione una opción" itemValue=""
+						noSelectionOption="true" />
+					<f:selectItems value="#{productoBean.listaParametrizacion}" />
+				</p:selectOneMenu>
+			</p:panelGrid>
+			<br></br>
+			<p:commandButton value="Generar" process="@this :frmMen:panGriProLot"
+				actionListener="#{productoBean.generarLote}"
+				update=":frmMen:panGriProLot :frmGen:datTabPro :frmGen:menGen"
+				oncomplete="PF('diaLot').hide();" />
+		</p:dialog>
+	</ui:define>
+</ui:composition>

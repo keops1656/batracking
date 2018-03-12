@@ -1,0 +1,105 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/templates/plantilla.xhtml">
+	<ui:define name="contenido">
+		<p:growl id="menGen" />
+		<p:toolbar>
+			<f:facet name="left">
+				<p:outputLabel value="Administración de Entidades" />
+			</f:facet>
+			<f:facet name="right">
+				<p:commandButton value="Nuevo" icon="ui-icon-document"
+					process="@this" actionListener="#{entidadBean.resetearFormulario}"
+					update="@form" />
+				<p:commandButton value="Guardar" icon="ui-icon-disk"
+					process="@this :frmGen:panGriFab"
+					actionListener="#{entidadBean.guardar}"
+					update=":frmGen:panGriFab :frmGen:datTabFab :frmGen:menGen" />
+				<p:commandButton value="Editar" icon="ui-icon-pencil"
+					process="@this" actionListener="#{entidadBean.editar}"
+					update=":frmGen:panGriFab :frmGen:menGen" />
+				<p:commandButton value="Eliminar" icon="ui-icon-trash"
+					onclick="PF('diaEli').show();" />
+			</f:facet>
+		</p:toolbar>
+		<br />
+		<p:panelGrid id="panGriFab" columns="6" style="width:100%">
+			<p:outputLabel id="lblTipEnt" value="Tipo Entidad:" for="cmbTipEnt"
+				styleClass="etiquetaReq" />
+			<p:selectOneMenu id="cmbTipEnt" effect="drop" required="true"
+				value="#{entidadBean.idTipEnt}" style="width:200px!important">
+				<f:selectItem itemLabel="Seleccione una opción" itemValue=""
+					noSelectionOption="true" />
+				<f:selectItems value="#{entidadBean.listaTipoEntidades}" />
+			</p:selectOneMenu>
+			<p:outputLabel for="txtNomEnt" value="Nombre:" styleClass="etiquetaReq" />
+			<p:inputText id="txtNomEnt" value="#{entidadBean.entidad.entNombre}"
+				style="width:200px!important" required="true" maxlength="25" />
+			<p:outputLabel for="txtEntRazSoc" value="Razón Social:"
+				styleClass="etiquetaReq" />
+			<p:inputText id="txtEntRazSoc"
+				value="#{entidadBean.entidad.entRazonSocial}"
+				style="width:200px!important" required="true" />
+			<p:outputLabel value="Descripción:" styleClass="etiquetaReq" />
+			<p:inputTextarea cols="50" style="width:200px!important"
+				value="#{entidadBean.entidad.entDescripcion}" rows="4"
+				maxlength="150" />
+			<p:outputLabel for="txtEntCont" value="Contacto:"
+				styleClass="etiquetaReq" />
+			<p:inputText id="txtEntCont"
+				value="#{entidadBean.entidad.entContacto}"
+				style="width:200px!important" required="true" />
+			<p:outputLabel value="Email:" styleClass="etiquetaReq"/>
+			<p:inputText value="#{entidadBean.entidad.entEmail}"
+				style="width:200px!important" />
+			<p:outputLabel value="Página Web:" styleClass="etiquetaReq"/>
+			<p:inputText value="#{entidadBean.entidad.entPaginaWeb}"
+				style="width:200px!important" />
+		</p:panelGrid>
+		<br />
+		<p:dataTable id="datTabFab" value="#{entidadBean.listaEntidades}"
+			var="ent" rowKey="#{ent.idEntidad}" selectionMode="single"
+			paginator="true" rows="10">
+			<f:facet name="header">
+				<p:outputLabel value="Lista de Fabricantes" />
+			</f:facet>
+			<p:ajax event="rowSelect"
+				listener="#{entidadBean.seleccionarRegistro}" />
+			<p:column headerText="Tipo Entidad:"
+				sortBy="#{ent.tipoEntidad.tipentNombre}">
+				<p:outputLabel value="#{ent.tipoEntidad.tipentNombre}" />
+			</p:column>
+			<p:column headerText="Nombre" sortBy="#{ent.entNombre}">
+				<p:outputLabel value="#{ent.entNombre}" />
+			</p:column>
+			<p:column headerText="Razón Social" sortBy="#{ent.entRazonSocial}">
+				<p:outputLabel value="#{ent.entRazonSocial}" />
+			</p:column>
+			<p:column headerText="Descripción">
+				<p:outputLabel value="#{ent.entDescripcion}" />
+			</p:column>
+			<p:column headerText="Contacto" sortBy="#{ent.entContacto}">
+				<p:outputLabel value="#{ent.entContacto}" />
+			</p:column>
+			<p:column headerText="Email" sortBy="#{ent.entEmail}">
+				<p:outputLabel value="#{ent.entEmail}" />
+			</p:column>
+			<p:column headerText="Página Web">
+				<p:outputLabel value="#{ent.entPaginaWeb}" />
+			</p:column>
+		</p:dataTable>
+	</ui:define>
+	<ui:define name="mensaje">
+		<p:confirmDialog widgetVar="diaEli" width="300" height="70"
+			message="Esta seguro de eliminar el registro?" header="Confirmación">
+			<p:commandButton value="Si" process="@this"
+				actionListener="#{entidadBean.eliminar}"
+				update=":frmGen:datTabFab :frmGen:menGen"
+				oncomplete="PF('diaEli').hide();" />
+			<p:commandButton value="No" onclick="PF('diaEli').hide();" />
+		</p:confirmDialog>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,91 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/templates/plantilla.xhtml">
+	<ui:define name="contenido">
+		<p:growl id="menGen" />
+		<p:toolbar>
+			<f:facet name="left">
+				<p:outputLabel value="Administración de Parametrización" />
+			</f:facet>
+			<f:facet name="right">
+				<p:commandButton value="Nuevo" icon="ui-icon-document"
+					process="@this"
+					actionListener="#{parametroBean.resetearFormulario}" update="@form" />
+				<p:commandButton value="Guardar" icon="ui-icon-disk"
+					process="@this :frmGen:panGriPar"
+					actionListener="#{parametroBean.guardar}"
+					update=":frmGen:panGriPar :frmGen:datTabPar :frmGen:menGen" />
+				<p:commandButton value="Editar" icon="ui-icon-pencil"
+					process="@this" actionListener="#{parametroBean.editar}"
+					update=":frmGen:panGriPar :frmGen:menGen" />
+				<p:commandButton value="Eliminar" icon="ui-icon-trash"
+					onclick="PF('diaEli').show();" />
+			</f:facet>
+		</p:toolbar>
+		<br />
+		<p:panelGrid id="panGriPar" columns="4" style="width:100%">
+			<p:outputLabel for="spiParVidUti" value="Vida Útil Bateria:"
+				styleClass="etiquetaReq" />
+			<h:panelGroup>
+				<p:spinner id="spiParVidUti"
+					value="#{parametroBean.parametro.parVidaUtil}" required="true" />
+				<p:outputLabel value=" (Nro. Meses)" />
+			</h:panelGroup>
+			<p:outputLabel for="spiParMant" value="Mantenimiento:"
+				styleClass="etiquetaReq" />
+			<h:panelGroup>
+				<p:spinner id="spiParMant"
+					value="#{parametroBean.parametro.parMantenimiento}" required="true" />
+				<p:outputLabel value=" (Nro. Meses)" />
+			</h:panelGroup>
+			<p:outputLabel for="spiParRef" value="Refrescamiento:"
+				styleClass="etiquetaReq" />
+			<h:panelGroup>
+				<p:spinner id="spiParRef"
+					value="#{parametroBean.parametro.parRefrescamiento}" required="true" />
+				<p:outputLabel value=" (Nro. Meses)" />
+			</h:panelGroup>
+			<p:outputLabel for="calFecPar" value="Fecha Parámetro:"
+				styleClass="etiquetaReq" />
+			<p:calendar id="calFecPar" pattern="yyyy-MM-dd" required="true"
+				value="#{parametroBean.parametro.parFecha}" />
+		</p:panelGrid>
+		<br />
+		<p:dataTable id="datTabPar" value="#{parametroBean.listaParametros}"
+			var="par" rowKey="#{par.parCodigo}" selectionMode="single"
+			paginator="true" rows="10">
+			<f:facet name="header">
+				<p:outputLabel value="Lista de Parámetros" />
+			</f:facet>
+			<p:ajax event="rowSelect"
+				listener="#{parametroBean.seleccionarRegistro}" />
+			<p:column headerText="Vida Útil">
+				<p:outputLabel value="#{par.parVidaUtil}" />
+			</p:column>
+			<p:column headerText="Refrescamiento">
+				<p:outputLabel value="#{par.parRefrescamiento}" />
+			</p:column>
+			<p:column headerText="Mantenimiento">
+				<p:outputLabel value="#{par.parMantenimiento}" />
+			</p:column>
+			<p:column headerText="Fecha">
+				<p:outputLabel value="#{par.parFecha}">
+					<f:convertDateTime pattern="yyyy-MM-dd" />
+				</p:outputLabel>
+			</p:column>
+		</p:dataTable>
+	</ui:define>
+	<ui:define name="mensaje">
+		<p:confirmDialog widgetVar="diaEli" width="300" height="80"
+			message="Esta seguro de eliminar el registro?" header="Confirmación">
+			<p:commandButton value="Si" process="@this"
+				actionListener="#{parametroBean.eliminar}"
+				update=":frmGen:datTabPar :frmGen:menGen"
+				oncomplete="PF('diaEli').hide();" />
+			<p:commandButton value="No" onclick="PF('diaEli').hide();" />
+		</p:confirmDialog>
+	</ui:define>
+</ui:composition>

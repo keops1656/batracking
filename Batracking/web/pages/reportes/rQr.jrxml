@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.5.1.final using JasperReports Library version 6.5.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rQr" pageWidth="595" pageHeight="842" whenNoDataType="NoPages" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Error" uuid="d58ac392-42cc-4a56-852e-e97a789efb30">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<parameter name="codigo" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT ent.ent_nombre,ent.id_entidad, pal.pall_codigo, prod.prod_codigo FROM entidad ent INNER JOIN producto prod ON ent.id_entidad = prod.id_entidad INNER JOIN pallet pal ON prod.id_pallet = pal.id_pallet WHERE ent.id_entidad = $P{codigo}]]>
+	</queryString>
+	<field name="ent_nombre" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="id_entidad" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="pall_codigo" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="prod_codigo" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="219" y="29" width="100" height="20" uuid="eb74d2f8-ea91-4037-85ff-6ba068758689"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[LISTA DE CÓDIGOS
+]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="19" width="100" height="20" uuid="5202dadd-5a36-471b-af89-b2ff7329dcff"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[ENTIDAD:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="155" y="19" width="100" height="20" uuid="06046ded-bf16-47da-bc60-7473635fd244"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ent_nombre}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="104" splitType="Stretch">
+			<image>
+				<reportElement x="0" y="0" width="100" height="100" uuid="1a13b5f4-6a25-4bd4-af71-290cabab0863"/>
+				<imageExpression><![CDATA[com.google.zxing.client.j2se.MatrixToImageWriter.toBufferedImage(
+    new com.google.zxing.qrcode.QRCodeWriter().encode(
+           $F{prod_codigo}, com.google.zxing.BarcodeFormat.QR_CODE, 70, 70))]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="255" y="11" width="100" height="20" uuid="472688f0-e75d-4ec0-81d5-5df3d14b3edf"/>
+				<textFieldExpression><![CDATA[$F{pall_codigo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="119" y="11" width="100" height="20" uuid="e7cb4671-5e42-4cf6-beed-a4ced73427ba"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[PALLET:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="255" y="52" width="100" height="20" uuid="ac48eb6e-a52d-4002-b298-8157bc8af899"/>
+				<textFieldExpression><![CDATA[$F{prod_codigo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="119" y="52" width="100" height="20" uuid="fa778cdb-802f-43e3-816a-1f32eb6a898a"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CODIGO:]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
