@@ -74,12 +74,14 @@ public class RepModel {
 	}
 
 
-	public void getReporteCodigo(String strRuta, int idTipEnt) throws Exception, ClassNotFoundException, ClassNotFoundException, InstantiationException, IllegalAccessException, SQLException, IOException{
-        Connection conexion = null;
+	public void getReporteCodigo(String strRuta, int idPallet) throws Exception, ClassNotFoundException, ClassNotFoundException, InstantiationException, IllegalAccessException, SQLException, IOException{
+        System.out.println("Ruta :" + strRuta);
+        System.out.println("idPallet :" + idPallet);
+		Connection conexion = null;
         AccesoReportes accesoDatos = new AccesoReportes();
         conexion = accesoDatos.getConReportes();
         Map<String, Object> parametro = new HashMap<String, Object>();
-        parametro.put("codigo", idTipEnt);
+        parametro.put("codigo", idPallet);
         try {
             File file = new File(strRuta);
             HttpServletResponse httpServletResponse = (HttpServletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();

@@ -17,44 +17,41 @@ import javax.servlet.ServletContext;
 
 import com.matoosfe.batracking.bean.seguridad.LoginBean;
 import com.matoosfe.batracking.modelo.Entidad;
-import com.matoosfe.batracking.modelo.Pallet;
 import com.matoosfe.batracking.modelo.TipoEntidad;
 import com.matoosfe.batracking.modelo.Usuario;
 import com.matoosfe.batracking.negocio.admin.EntidadFacade;
-import com.matoosfe.batracking.negocio.admin.ProductoFacade;
 import com.matoosfe.batracking.negocio.seguridad.TipoEntidadFacade;
 import com.matoosfe.kernel.web.bean.AbstractManagedBean;
 
 
 @ManagedBean
 @ViewScoped
-public class RepCodigosBean extends AbstractManagedBean{
+public class RepCodigosBean2 extends AbstractManagedBean{
 	
 	private Usuario usuarioSesion;
-	private int idPallet;
-	private List<SelectItem> listaPalletsFabrica;
-//	private int idEnt;
-//	private List<SelectItem> listaEntidades;
+	private int idTipEnt;
+	private List<SelectItem> listaTipoEntidades;
+	private int idEnt;
+	private List<SelectItem> listaEntidades;
 	
 	@EJB
 	private TipoEntidadFacade adminTipoEntidad;
 	@EJB
 	private EntidadFacade adminEntidad;	
-	@EJB
-	private ProductoFacade adminProducto;	
 	
 	private String ruta;
 	
 	
 	
-	public RepCodigosBean() {
-		this.listaPalletsFabrica = new ArrayList<>();
+	public RepCodigosBean2() {
+		this.listaTipoEntidades = new ArrayList<>();
+		this.listaEntidades = new ArrayList<>();
 		this.usuarioSesion = ((LoginBean) recuperarParametroSession("loginBean")).getUsuario();
 	}
 
 
-	public int getIdPallet() {
-		return idPallet;
+	public int getIdTipEnt() {
+		return idTipEnt;
 	}
 
 	
@@ -69,29 +66,40 @@ public class RepCodigosBean extends AbstractManagedBean{
 	}
 
 
-	public void setIdPallet(int idPallet) {
-		this.idPallet = idPallet;
+	public void setIdTipEnt(int idTipEnt) {
+		this.idTipEnt = idTipEnt;
 	}
 
 
-	public List<SelectItem> getListaPalletsFabrica() {
-		return listaPalletsFabrica;
+	public List<SelectItem> getListaTipoEntidades() {
+		return listaTipoEntidades;
 	}
 
 
-	public void setListaPalletsFabrica(List<SelectItem> listaTipoEntidades) {
-		this.listaPalletsFabrica = listaTipoEntidades;
+	public void setListaTipoEntidades(List<SelectItem> listaTipoEntidades) {
+		this.listaTipoEntidades = listaTipoEntidades;
 	}
 
 
-//	public int getIdEnt() {
-//		return idEnt;
-//	}
+	public int getIdEnt() {
+		return idEnt;
+	}
 
 
-//	public void setIdEnt(int idEnt) {
-//		this.idEnt = idEnt;
-//	}
+	public void setIdEnt(int idEnt) {
+		this.idEnt = idEnt;
+	}
+
+
+	public List<SelectItem> getListaEntidades() {
+		return listaEntidades;
+	}
+
+
+	public void setListaEntidades(List<SelectItem> listaEntidades) {
+		this.listaEntidades = listaEntidades;
+	}
+
 
 	public TipoEntidadFacade getAdminTipoEntidad() {
 		return adminTipoEntidad;
@@ -125,13 +133,14 @@ public class RepCodigosBean extends AbstractManagedBean{
 
 
 	public void resetearFormulario() {
-		this.idPallet = 0;
+		this.idTipEnt = 0;
+		this.idEnt = 0;
 	}
 	
 	@PostConstruct
 	public void inicializar() {
 		if (usuarioSesion != null) {
-			cargarPalletsFabrica();
+			cargarTiposEntidad();
 		}else {
 			try {
 				ExternalContext ec = getExternalContext();
@@ -143,17 +152,24 @@ public class RepCodigosBean extends AbstractManagedBean{
 
 	}
 	
-	private void cargarPalletsFabrica() {
+	private void cargarTiposEntidad() {
 		try {
-			this.listaPalletsFabrica.clear();
-			List<Pallet> lstPallets = adminProducto.buscarPalletsDadoFabrica(usuarioSesion.getEntidad().getIdEntidad());
-			for (Pallet pal : lstPallets) {
-				this.listaPalletsFabrica.add(new SelectItem(pal.getIdPallet(), pal.getPallCodigo()));
+			this.listaTipoEntidades.clear();
+			for (TipoEntidad tipUsu : adminTipoEntidad.buscarTodos()) {
+				this.listaTipoEntidades.add(new SelectItem(tipUsu.getIdTipoEntidad(), tipUsu.getTipentNombre()));
 			}
 		} catch (Exception e) {
-			addError("No se pudo cargar los pallets de la fábrica:" + e.getMessage());
+			addError("No se pudo cargar los tipos de usuarios:" + e.getMessage());
 		}
 	}
+	
+	public void cargarEntidadesPadre() {
+		this.listaEntidades.clear();
+		TipoEntidad tipoEnt = adminTipoEntidad.buscarPorId(idTipEnt);
+		for (Entidad ent : adminEntidad.buscarEntidadPorTipo(tipoEnt.getTipentNombre().toUpperCase())) {
+			this.listaEntidades.add(new SelectItem(ent.getIdEntidad(), ent.getEntNombre()));
+		}
+	}	
 	
 	/************Reporte*************/
 	public void verReporte() throws SQLException, IOException, ClassNotFoundException, InstantiationException, IllegalAccessException, Exception {
@@ -163,7 +179,7 @@ public class RepCodigosBean extends AbstractManagedBean{
         String Ruta = servletContext.getRealPath("//pages//reportes//rQr.jasper");
         FacesContext.getCurrentInstance().responseComplete();
         
-        rep.getReporteCodigo(Ruta, this.idPallet);
-        System.out.println("File:" + this.idPallet);
+        rep.getReporteCodigo(Ruta, this.idEnt);
+        System.out.print("File:" + this.idEnt);
 	}
 }

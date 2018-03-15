@@ -113,7 +113,7 @@ public class LoginBean extends AbstractManagedBean implements Serializable {
 		DefaultMenuItem iteRepPro = new DefaultMenuItem("Reporte");
 		iteRepPro.setUrl("/pages/reportes/repVidaUtil.mat");
 		
-		DefaultMenuItem iteRepCo = new DefaultMenuItem("Codigos");
+		DefaultMenuItem iteRepCo = new DefaultMenuItem("Códigos");
 		iteRepCo.setUrl("/pages/reportes/repCodigos.mat");
 
 		if (usuario.getEntidad().getTipoEntidad().getTipentNombre().equals(EnumTipoEntidad.FABRICA.toString())) {

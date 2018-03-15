@@ -8,6 +8,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import com.matoosfe.batracking.modelo.ComentarioSeguimiento;
+import com.matoosfe.batracking.modelo.Pallet;
 import com.matoosfe.batracking.modelo.Producto;
 import com.matoosfe.batracking.modelo.RelacionEntidad;
 import com.matoosfe.batracking.modelo.Seguimiento;
@@ -137,6 +138,33 @@ public class ProductoFacade extends AbstractFacade<Producto> {
 		
 	}
 	
+	/**
+	 * Método para buscar pallets dado idEntidad
+	 * 
+	 * @return
+	 */
+	public List<Pallet> buscarPalletsDadoFabrica(int idFabrica) throws Exception {
+		try{ 
+			TypedQuery<Pallet> conPro = em.createQuery(
+				"SELECT DISTINCT pal FROM Pallet pal " +
+				"INNER JOIN Producto pro ON pro.pallet.idPallet = pal.idPallet " +
+				"WHERE pro.pallet.idPallet IS NOT NULL " +
+				"AND pro.entidad.idEntidad = :fabrica", Pallet.class);
+			conPro.setParameter("fabrica", idFabrica);
+			return conPro.getResultList();
+		}catch(Exception ex) {
+			System.out.println(ex.getMessage());
+			throw new Exception(ex);
+		}
+		
+//		SELECT DISTINCT pallet.* FROM pallet
+//		INNER JOIN producto ON producto.id_pallet = pallet.id_pallet
+//		WHERE producto.id_pallet IS NOT NULL
+//		AND id_entidad = 17;
+
+		
+		
+	}
 	/**
 	 * Método para enlistar productos en stock Local
 	 * @return
