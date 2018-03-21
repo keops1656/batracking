@@ -32,6 +32,7 @@ public class EProducto {
 	private String segFechaRecepecion;
 	private String segFechaRefrescada;
 	private String strLugar;
+	private String strEspecificacionBateria;
 	
 	public EProducto() {
 		this.idProducto = 0;
@@ -56,6 +57,7 @@ public class EProducto {
 		this.segFechaRecepecion = null;
 		this.segFechaRefrescada= null;
 		this.strLugar = "";
+		this.strEspecificacionBateria = "";
 	}
 	
 	public EProducto(Producto producto, Seguimiento seguimientoRefresh, Seguimiento seguimientoRecepcion ) {
@@ -145,11 +147,14 @@ public class EProducto {
 			this.segFechaRefrescada = null;
 		}
 		
+		if(producto.getEspecficacionBateria().getCodEspecificacion()!= null  ) {
+			this.strEspecificacionBateria = producto.getEspecficacionBateria().getCodEspecificacion();
+		}else {
+			this.strEspecificacionBateria = "";
+		}
+		
 		
 	}
-		
-	
-	
 	
 	
 	
@@ -430,6 +435,14 @@ public class EProducto {
 		this.strNombreEntidad = strNombreEntidad;
 	}
 	
+	public String getStrEspecificacionBateria() {
+		return strEspecificacionBateria;
+	}
+
+	public void setStrEspecificacionBateria(String strEspecificacionBateria) {
+		this.strEspecificacionBateria = strEspecificacionBateria;
+	}
+
 	
 		
 }

@@ -18,5 +18,8 @@
 		<class>com.matoosfe.batracking.modelo.Parametro</class>
 		<class>com.matoosfe.batracking.modelo.RelacionEntidad</class>
 		<class>com.matoosfe.batracking.modelo.TipoBateria</class>
+		<class>com.matoosfe.batracking.modelo.EspecficacionBateria</class>
+		<class>com.matoosfe.batracking.modelo.MarcaAuto</class>
+		<class>com.matoosfe.batracking.modelo.ModeloAuto</class>
 	</persistence-unit>
 </persistence>

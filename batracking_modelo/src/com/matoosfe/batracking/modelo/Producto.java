@@ -52,6 +52,11 @@ public class Producto implements Serializable {
 
 	@Column(name = "prod_contador_refrescar")
 	private int prodContadorRefrescar;
+	
+	//bi-directional many-to-one association to EspecficacionBateria
+	@ManyToOne
+	@JoinColumn(name="id_especificacion_bateria")
+	private EspecficacionBateria especficacionBateria;
 
 	// bi-directional many-to-one association to Pallet
 	@ManyToOne
@@ -155,6 +160,14 @@ public class Producto implements Serializable {
 	 */
 	public void setProdContadorRefrescar(int prodContadorRefrescar) {
 		this.prodContadorRefrescar = prodContadorRefrescar;
+	}
+	
+	public EspecficacionBateria getEspecficacionBateria() {
+		return this.especficacionBateria;
+	}
+
+	public void setEspecficacionBateria(EspecficacionBateria especficacionBateria) {
+		this.especficacionBateria = especficacionBateria;
 	}
 
 	public Pallet getPallet() {
