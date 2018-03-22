@@ -20,7 +20,7 @@ public class ModeloAuto implements Serializable {
 	private int id;
 
 	@Column(name="anio")
-	private int anio;
+	private String anio;
 
 	@Column(name="descripcion")
 	private String descripcion;
@@ -32,6 +32,11 @@ public class ModeloAuto implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="id_especificacion")
 	private EspecficacionBateria especficacionBateria;
+	
+	//bi-directional many-to-one association to EspecficacionBateria
+	@ManyToOne
+	@JoinColumn(name="id_especificacion_full")
+	private EspecficacionBateria especficacionBateriaFull;
 
 	//bi-directional many-to-one association to MarcaAuto
 	@ManyToOne
@@ -49,11 +54,11 @@ public class ModeloAuto implements Serializable {
 		this.id = id;
 	}
 
-	public int getAnio() {
+	public String getAnio() {
 		return this.anio;
 	}
 
-	public void setAnio(int anio) {
+	public void setAnio(String anio) {
 		this.anio = anio;
 	}
 
@@ -81,6 +86,14 @@ public class ModeloAuto implements Serializable {
 		this.especficacionBateria = especficacionBateria;
 	}
 
+	public EspecficacionBateria getEspecficacionBateriaFull() {
+		return this.especficacionBateriaFull;
+	}
+
+	public void setEspecficacionBateriaFull(EspecficacionBateria especficacionBateriaFull) {
+		this.especficacionBateriaFull = especficacionBateriaFull;
+	}
+	
 	public MarcaAuto getMarcaAuto() {
 		return this.marcaAuto;
 	}
