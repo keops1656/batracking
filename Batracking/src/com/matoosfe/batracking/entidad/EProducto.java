@@ -147,10 +147,10 @@ public class EProducto {
 			this.segFechaRefrescada = null;
 		}
 		
-		if(producto.getEspecficacionBateria().getCodEspecificacion()!= null  ) {
+		if( producto.getEspecficacionBateria() != null  ) {
 			this.strEspecificacionBateria = producto.getEspecficacionBateria().getCodEspecificacion();
 		}else {
-			this.strEspecificacionBateria = "";
+			this.strEspecificacionBateria = null;
 		}
 		
 		
