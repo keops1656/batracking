@@ -7,6 +7,7 @@ import javax.ws.rs.Produces;
 import com.matoosfe.batracking.entidad.EProducto;
 import com.matoosfe.batracking.entidad.EstadosMetodos;
 import com.matoosfe.batracking.modelo.Entidad;
+import com.matoosfe.batracking.modelo.EspecificacionBateria;
 import com.matoosfe.batracking.modelo.Producto;
 import com.matoosfe.batracking.modelo.RelacionEntidad;
 import com.matoosfe.batracking.modelo.Seguimiento;
@@ -14,6 +15,7 @@ import com.matoosfe.batracking.modelo.Usuario;
 import com.matoosfe.batracking.negocio.seguimiento.SeguimientoFacade;
 import com.matoosfe.batracking.negocio.seguridad.RelacionEntidadFacade;
 import com.matoosfe.batracking.negocio.admin.EntidadFacade;
+import com.matoosfe.batracking.negocio.admin.EspecificacionFacade;
 import com.matoosfe.batracking.negocio.admin.ProductoFacade;
 
 import java.util.ArrayList;
@@ -39,6 +41,9 @@ public class wsStock {
 	
 	@EJB
 	private EntidadFacade EntidadEJB;
+	
+	@EJB
+	private EspecificacionFacade EspecificacionEJB;
 	
 	@GET
     @Produces("application/json; charset=utf-8")
@@ -72,18 +77,21 @@ public class wsStock {
 		return lstMiStock;
     }	
 
+	/*
+	 * Buscar baterias en mi stock dado una especificacion de bateria
+	 */
 	@GET
     @Produces("application/json; charset=utf-8")
-    @Path("buscarBateriaMiStock/{idEntidad}/{strCodigo}")
+    @Path("buscarBateriaMiStock/{idEntidad}/{strCodigoEspecificacion}")
     public EstadosMetodos buscarBateriaMiStock(
     		@PathParam("idEntidad") int intIdEntidad,
-    		@PathParam("strCodigo") String strCodigo
+    		@PathParam("strCodigoEspecificacion") String strCodigoEspecificacion
     ) throws Exception {
-			EstadosMetodos objEstadoMetodo = new EstadosMetodos(false, "Bateria no disponible");
+			EstadosMetodos objEstadoMetodo = new EstadosMetodos(false, "No disponible baterias con la especificacion " + strCodigoEspecificacion);
 			try {
-				Producto producto = productoEJB.buscarProductoDadoCodigo(strCodigo);
+				EspecificacionBateria especificacion = EspecificacionEJB.buscarEspecificacionDadoCodigo(strCodigoEspecificacion);
 			}catch(Exception e) {
-				objEstadoMetodo.setStrMensaje("No existe el código de la Bateria " + strCodigo);
+				objEstadoMetodo.setStrMensaje("No existe el código de especificación:  " + strCodigoEspecificacion);
 				return objEstadoMetodo;
 			}
 			try {
@@ -91,7 +99,7 @@ public class wsStock {
 				List<Usuario> lstUsuario = objEntidad.getUsuarios();
 				if( lstUsuario.size() > 0 && lstUsuario != null ) {
 					for (Usuario objUsuario : lstUsuario) {
-						boolean existeBateria = productoEJB.comprobrarExistenciaBateriaDadoUsuarioyCodigo(objUsuario.getIdUsuario(), strCodigo);
+						boolean existeBateria = productoEJB.comprobrarExistenciaBateriaDadoUsuarioyCodigoEspecificacion(objUsuario.getIdUsuario(), strCodigoEspecificacion);
 						if(existeBateria) {
 							objEstadoMetodo.setBlResultado(true);
 							objEstadoMetodo.setStrMensaje("Bateria disponible");
@@ -112,16 +120,16 @@ public class wsStock {
     @Path("stockFabrica/{idEntidad}/{strCodigo}")
     public EstadosMetodos stockFabrica(
     		@PathParam("idEntidad") int intIdEntidad,
-    		@PathParam("strCodigo") String strCodigo
+    		@PathParam("strCodigo") String strCodigoEspecificacion
     ) throws Exception {
 			EstadosMetodos objEstadoMetodo = new EstadosMetodos(false, "Bateria no disponible");
 			ArrayList<Integer> lstFabricas = new ArrayList<>();
 			ArrayList<Integer> lstPadres = new ArrayList<>();
 			ArrayList<Integer> lstAuxiliar = new ArrayList<>();
 			try {
-				Producto producto = productoEJB.buscarProductoDadoCodigo(strCodigo);
+				EspecificacionBateria especificacion = EspecificacionEJB.buscarEspecificacionDadoCodigo(strCodigoEspecificacion);
 			}catch(Exception e) {
-				objEstadoMetodo.setStrMensaje("No existe el código de la Bateria " + strCodigo);
+				objEstadoMetodo.setStrMensaje("No existe el código de especificación:  " + strCodigoEspecificacion);
 				return objEstadoMetodo;
 			}
 			try {
@@ -169,7 +177,7 @@ public class wsStock {
 						List<Usuario> lstUsuario = objEntidad.getUsuarios();
 						if( lstUsuario.size() > 0 && lstUsuario != null ) {
 							for (Usuario objUsuario : lstUsuario) {
-								boolean existeBateria = productoEJB.comprobrarExistenciaBateriaDadoUsuarioyCodigo(objUsuario.getIdUsuario(), strCodigo);
+								boolean existeBateria = productoEJB.comprobrarExistenciaBateriaDadoUsuarioyCodigoEspecificacion(objUsuario.getIdUsuario(), strCodigoEspecificacion);
 								if(existeBateria) {
 									objEstadoMetodo.setBlResultado(true);
 									objEstadoMetodo.setStrMensaje("Bateria disponible");
@@ -193,19 +201,19 @@ public class wsStock {
 	 */
 	@GET
     @Produces("application/json; charset=utf-8")
-    @Path("buscarBateriaMiRed/{idEntidad}/{strCodigo}")
+    @Path("buscarBateriaMiRed/{idEntidad}/{strCodigoEspecificacion}")
     public EstadosMetodos stockMiRed(
     		@PathParam("idEntidad") int intIdEntidad,
-    		@PathParam("strCodigo") String strCodigo
+    		@PathParam("strCodigoEspecificacion") String strCodigoEspecificacion
     ) throws Exception {
 			EstadosMetodos objEstadoMetodo = new EstadosMetodos(false, "Bateria no disponible");
 			ArrayList<Integer> lstVendedor = new ArrayList<>();
 			ArrayList<Integer> lstHijas = new ArrayList<>();
 			ArrayList<Integer> lstAuxiliar = new ArrayList<>();
 			try {
-				Producto producto = productoEJB.buscarProductoDadoCodigo(strCodigo);
+				EspecificacionBateria especificacion = EspecificacionEJB.buscarEspecificacionDadoCodigo(strCodigoEspecificacion);
 			}catch(Exception e) {
-				objEstadoMetodo.setStrMensaje("No existe el código de la Bateria " + strCodigo);
+				objEstadoMetodo.setStrMensaje("No existe el código de especificación:  " + strCodigoEspecificacion);
 				return objEstadoMetodo;
 			}
 			try {
@@ -254,7 +262,7 @@ public class wsStock {
 						List<Usuario> lstUsuario = objEntidad.getUsuarios();
 						if( lstUsuario.size() > 0 && lstUsuario != null ) {
 							for (Usuario objUsuario : lstUsuario) {
-								boolean existeBateria = productoEJB.comprobrarExistenciaBateriaDadoUsuarioyCodigo(objUsuario.getIdUsuario(), strCodigo);
+								boolean existeBateria = productoEJB.comprobrarExistenciaBateriaDadoUsuarioyCodigoEspecificacion(objUsuario.getIdUsuario(), strCodigoEspecificacion);
 								if(existeBateria) {
 									objEstadoMetodo.setBlResultado(true);
 									objEstadoMetodo.setStrMensaje("Bateria disponible");

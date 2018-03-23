@@ -29,6 +29,7 @@ public class ApplicationConfig extends Application {
     	resources.add(com.matoosfe.batracking.ws.wsSeguimiento.class);
     	resources.add(com.matoosfe.batracking.ws.wsProducto.class);
     	resources.add(com.matoosfe.batracking.ws.wsStock.class);
+    	resources.add(com.matoosfe.batracking.ws.wsEspecificacion.class);
     }
     
 }

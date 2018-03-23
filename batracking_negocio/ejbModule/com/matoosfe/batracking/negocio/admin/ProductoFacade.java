@@ -155,16 +155,10 @@ public class ProductoFacade extends AbstractFacade<Producto> {
 		}catch(Exception ex) {
 			System.out.println(ex.getMessage());
 			throw new Exception(ex);
-		}
-		
-//		SELECT DISTINCT pallet.* FROM pallet
-//		INNER JOIN producto ON producto.id_pallet = pallet.id_pallet
-//		WHERE producto.id_pallet IS NOT NULL
-//		AND id_entidad = 17;
-
-		
+		}	
 		
 	}
+	
 	/**
 	 * Método para enlistar productos en stock Local
 	 * @return
@@ -215,14 +209,15 @@ public class ProductoFacade extends AbstractFacade<Producto> {
 	 * @param idEntidad
 	 * @return
 	 */
-	public boolean comprobrarExistenciaBateriaDadoUsuarioyCodigo (int idUsuario , String codProducto) throws Exception {
+	public boolean comprobrarExistenciaBateriaDadoUsuarioyCodigoEspecificacion (int idUsuario , String codEspecificacion) throws Exception {
 		Long intCountExistencia = null;
 		try{
 			TypedQuery<Long> countEntRel = em
-					.createQuery("SELECT COUNT(seg.idSeguimiento) FROM Seguimiento seg WHERE seg.producto.prodCodigo =:cod " + 
+					.createQuery(	"SELECT COUNT(seg.idSeguimiento) FROM Seguimiento seg " +
+									"WHERE seg.producto.especificacionBateria.codEspecificacion =:cod " + 
 								"AND seg.usuario.idUsuario =:idUsu " +  
 								"AND seg.segActual =1", Long.class);
-			countEntRel.setParameter("cod", codProducto);
+			countEntRel.setParameter("cod", codEspecificacion);
 			countEntRel.setParameter("idUsu", idUsuario);
 			intCountExistencia = (Long) countEntRel.getSingleResult();
 		}catch(Exception ex) {
@@ -234,6 +229,20 @@ public class ProductoFacade extends AbstractFacade<Producto> {
 			return false;
 		}
 		
+	}
+	
+	/**
+	 * Método para enlistar productos dado Especificacion
+	 * @return
+	 */
+	public List<Producto> bateriasDadoEspecificacion( String codEspecificacion){
+		TypedQuery<Producto> conBaterias = em.createQuery(
+				"SELECT pro FROM Producto pro " +
+				"INNER JOIN EspecificacionBateria esp ON esp = pro.especificacionBateria " +
+				"WHERE esp.codEspecificacion = :codEsp AND pro.prodEstadoBateria = 'EN FABRICA'",
+				Producto.class);
+		conBaterias.setParameter("codEsp", codEspecificacion);
+		return conBaterias.getResultList(); 
 	}
 
 }

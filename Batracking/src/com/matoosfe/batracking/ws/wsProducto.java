@@ -94,5 +94,29 @@ public class wsProducto {
 		return lstEComentarios;
     }	
 
+	
+	@GET
+    @Produces("application/json; charset=utf-8")
+    @Path("obtenerBateriasDadoEspecificacion/{codEspecificacion}")
+    public ArrayList<EProducto> obtenerBateriasDadoEspecificacion(
+    		@PathParam("codEspecificacion") String codEspecificacion
+    ) throws Exception {
+			List<Producto> lstProductos = null;
+			ArrayList<EProducto> lstEProductos = new ArrayList<>();
+			try {
+				lstProductos = productoEJB.bateriasDadoEspecificacion(codEspecificacion);
+				if(lstProductos.size() > 0 && lstProductos != null) {
+					for (Producto objProducto : lstProductos) {
+						EProducto objEProducto = new EProducto(objProducto);
+						lstEProductos.add(objEProducto);
+					}
+				}
+			}catch(Exception e) {
+				System.out.println("Expecion >>" + e.getMessage());
+				lstEProductos.clear();
+			}
+		return lstEProductos;
+    }	
+
 
 }

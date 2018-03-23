@@ -31,12 +31,12 @@ public class ModeloAuto implements Serializable {
 	//bi-directional many-to-one association to EspecficacionBateria
 	@ManyToOne
 	@JoinColumn(name="id_especificacion")
-	private EspecficacionBateria especficacionBateria;
+	private EspecificacionBateria especificacionBateria;
 	
 	//bi-directional many-to-one association to EspecficacionBateria
 	@ManyToOne
 	@JoinColumn(name="id_especificacion_full")
-	private EspecficacionBateria especficacionBateriaFull;
+	private EspecificacionBateria especficacionBateriaFull;
 
 	//bi-directional many-to-one association to MarcaAuto
 	@ManyToOne
@@ -78,19 +78,19 @@ public class ModeloAuto implements Serializable {
 		this.motor = motor;
 	}
 
-	public EspecficacionBateria getEspecficacionBateria() {
-		return this.especficacionBateria;
+	public EspecificacionBateria getEspecficacionBateria() {
+		return this.especificacionBateria;
 	}
 
-	public void setEspecficacionBateria(EspecficacionBateria especficacionBateria) {
-		this.especficacionBateria = especficacionBateria;
+	public void setEspecficacionBateria(EspecificacionBateria especificacionBateria) {
+		this.especificacionBateria = especificacionBateria;
 	}
 
-	public EspecficacionBateria getEspecficacionBateriaFull() {
+	public EspecificacionBateria getEspecficacionBateriaFull() {
 		return this.especficacionBateriaFull;
 	}
 
-	public void setEspecficacionBateriaFull(EspecficacionBateria especficacionBateriaFull) {
+	public void setEspecficacionBateriaFull(EspecificacionBateria especficacionBateriaFull) {
 		this.especficacionBateriaFull = especficacionBateriaFull;
 	}
 	

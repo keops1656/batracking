@@ -156,6 +156,81 @@ public class EProducto {
 		
 	}
 	
+	public EProducto(Producto producto) {
+		if(producto.getIdProducto() > 0) {
+			this.idProducto = producto.getIdProducto();
+		}else {
+			this.idProducto = 0;
+		}
+		if(producto.getPallet() != null) {
+			this.idPallet = producto.getPallet().getIdPallet();
+		}else {
+			this.idPallet = 0;
+		}
+		
+		
+		if(producto.getProdCodigo() != null || !producto.getProdCodigo().equals("")  ) {
+			this.prodCodigo =producto.getProdCodigo();
+		}else {
+			this.prodCodigo = "";
+		}
+		if(producto.getProdEspecificaciones() != null || !producto.getProdEspecificaciones().equals("")  ) {
+			this.prodEspecificaciones =producto.getProdEspecificaciones();
+		}else {
+			this.prodEspecificaciones = "";
+		}
+		if(producto.getProdEstadoBateria() != null || !producto.getProdEstadoBateria().equals("")  ) {
+			this.prodEstadoBateria =producto.getProdEstadoBateria();
+		}else {
+			this.prodEstadoBateria = "";
+		}
+		if(producto.getProdFechaProduccion() != null  ) {
+			this.prodFechaProduccion = Fechas.convertirFechaString(producto.getProdFechaProduccion() );
+		}else {
+			this.prodFechaProduccion = null;
+		}
+		if(producto.getProdFechaVenta() != null  ) {
+			this.prodFechaVenta = Fechas.convertirFechaString(producto.getProdFechaVenta() );
+		}else {
+			this.prodFechaVenta = null;
+		}
+		if(producto.getProdFechaMantenimiento() != null  ) {
+			this.prodFechaMantenimiento = Fechas.convertirFechaString(producto.getProdFechaMantenimiento() );
+		}else {
+			this.prodFechaMantenimiento = null;
+		}
+		if(producto.getProdFechaRepone() != null  ) {
+			this.prodFechaRepone = Fechas.convertirFechaString(producto.getProdFechaRepone() );
+		}else {
+			this.prodFechaRepone = null;
+		}
+		if(producto.getParametro() != null) {
+			this.idParametrizacion = producto.getParametro().getParCodigo();
+		}else {
+			this.idParametrizacion = 0;
+		}
+		if(producto.getTipoBateria() != null) {
+			this.idTipoBateria = producto.getParametro().getParCodigo();
+		}else {
+			this.idTipoBateria = 0;
+		}
+		if(producto.getProdContadorRefrescar() > 0) {
+			this.intContadorRefrescador = producto.getProdContadorRefrescar();
+		}else {
+			this.intContadorRefrescador = 0;
+		}
+	
+		this.lstTransacciones = listarTransaccionesDisponibles(producto);
+		
+		if( producto.getEspecficacionBateria() != null  ) {
+			this.strEspecificacionBateria = producto.getEspecficacionBateria().getCodEspecificacion();
+		}else {
+			this.strEspecificacionBateria = null;
+		}
+		
+	}
+	
+	
 	
 	
 	private ArrayList<String> listarTransaccionesDisponibles(Producto producto) {

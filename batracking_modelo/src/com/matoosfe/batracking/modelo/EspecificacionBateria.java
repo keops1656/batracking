@@ -11,8 +11,8 @@ import java.util.List;
  */
 @Entity
 @Table(name="especficacion_bateria")
-@NamedQuery(name="EspecficacionBateria.findAll", query="SELECT e FROM EspecficacionBateria e")
-public class EspecficacionBateria implements Serializable {
+@NamedQuery(name="EspecficacionBateria.findAll", query="SELECT e FROM EspecificacionBateria e")
+public class EspecificacionBateria implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -24,14 +24,14 @@ public class EspecficacionBateria implements Serializable {
 	private String codEspecificacion;
 
 	//bi-directional many-to-one association to ModeloAuto
-	@OneToMany(mappedBy="especficacionBateria")
+	@OneToMany(mappedBy="especificacionBateria")
 	private List<ModeloAuto> modeloAutos;
 
 	//bi-directional many-to-one association to Producto
-	@OneToMany(mappedBy="especficacionBateria")
+	@OneToMany(mappedBy="especificacionBateria")
 	private List<Producto> productos;
 
-	public EspecficacionBateria() {
+	public EspecificacionBateria() {
 	}
 
 	public int getId() {
