@@ -33,7 +33,12 @@ public class EEspecificacion {
 		this.lstModeloAuto = new ArrayList<>();
 		if( objEspecificacionBateria.getModeloAutos().size() > 0 ) {
 			for (ModeloAuto objModeloAuto : objEspecificacionBateria.getModeloAutos()) {
-				System.out.println("ID MODELO " + objModeloAuto.getId());
+				EModeloAuto objEModeloAuto = new EModeloAuto(objModeloAuto);
+				lstModeloAuto.add(objEModeloAuto);			
+			}
+		}
+		if( objEspecificacionBateria.getModeloAutos_Full().size() > 0 ) {
+			for (ModeloAuto objModeloAuto : objEspecificacionBateria.getModeloAutos_Full()) {
 				EModeloAuto objEModeloAuto = new EModeloAuto(objModeloAuto);
 				lstModeloAuto.add(objEModeloAuto);			
 			}

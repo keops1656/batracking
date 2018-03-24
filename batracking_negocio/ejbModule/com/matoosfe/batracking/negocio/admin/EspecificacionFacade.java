@@ -55,7 +55,8 @@ public class EspecificacionFacade extends AbstractFacade<EspecificacionFacade> {
 	public EspecificacionBateria buscarEspecificacionDadoCodigo(String strCodigoEspecificacion) throws Exception {
 		try{ 
 			TypedQuery<EspecificacionBateria> conEsp = em.createQuery(
-				"SELECT esp FROM Especificacion esp WHERE esp.codEspecificacion = :codigoEspecificacion", EspecificacionBateria.class);
+					"SELECT esp FROM EspecificacionBateria esp " +
+					"WHERE esp.codEspecificacion = :codigoEspecificacion ", EspecificacionBateria.class);
 			conEsp.setParameter("codigoEspecificacion", strCodigoEspecificacion);
 			return conEsp.getSingleResult();
 		}catch(Exception ex) {

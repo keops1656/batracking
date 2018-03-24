@@ -26,6 +26,10 @@ public class EspecificacionBateria implements Serializable {
 	//bi-directional many-to-one association to ModeloAuto
 	@OneToMany(mappedBy="especificacionBateria")
 	private List<ModeloAuto> modeloAutos;
+	
+	//bi-directional many-to-one association to ModeloAuto
+	@OneToMany(mappedBy="especificacionBateriaFull")
+	private List<ModeloAuto> modeloAutos_Full;
 
 	//bi-directional many-to-one association to Producto
 	@OneToMany(mappedBy="especificacionBateria")
@@ -56,6 +60,14 @@ public class EspecificacionBateria implements Serializable {
 
 	public void setModeloAutos(List<ModeloAuto> modeloAutos) {
 		this.modeloAutos = modeloAutos;
+	}
+	
+	public List<ModeloAuto> getModeloAutos_Full() {
+		return this.modeloAutos_Full;
+	}
+
+	public void setModeloAutos_Full(List<ModeloAuto> modeloAutos) {
+		this.modeloAutos_Full = modeloAutos;
 	}
 
 	public ModeloAuto addModeloAuto(ModeloAuto modeloAuto) {

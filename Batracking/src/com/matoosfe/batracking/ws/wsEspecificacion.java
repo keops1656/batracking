@@ -60,6 +60,26 @@ public class wsEspecificacion {
 			}
 		return lstEEspecificaciones;
     }	
-
+	
+	@GET
+    @Produces("application/json; charset=utf-8")
+    @Path("obtenerEspecificacionDadoCodigo/{codEspecificacion}")
+    public EEspecificacion obtenerEspecificacionDadoCodigo(
+    		@PathParam("codEspecificacion") String strCodigoEspecificacion
+    		) throws Exception {
+			EspecificacionBateria objEspecificacion = null;
+			EEspecificacion objEEspecificacion = new EEspecificacion();
+			try {
+				objEspecificacion = especificacionFacade.buscarEspecificacionDadoCodigo(strCodigoEspecificacion);
+				objEEspecificacion = new EEspecificacion( objEspecificacion );
+			}catch(Exception e) {
+				objEEspecificacion = new EEspecificacion();
+				objEEspecificacion.setIntIdEspecificacion(-1);
+				objEEspecificacion.setStrCodEspecificacion(null);
+				objEEspecificacion.setLstModeloAuto(null);
+			}
+		return objEEspecificacion;
+    }	
+	
 
 }
