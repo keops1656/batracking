@@ -22,7 +22,7 @@ import com.matoosfe.kernel.core.negocio.AbstractFacade;
  *         <a href="http://www.matoosfe.com">Matoosfe</a>
  */
 @Stateless
-public class EspecificacionFacade extends AbstractFacade<EspecificacionFacade> {
+public class EspecificacionFacade extends AbstractFacade<EspecificacionBateria> {
 	
 	@PersistenceContext(unitName = "batrackingPU")
 	private EntityManager em;
@@ -33,7 +33,7 @@ public class EspecificacionFacade extends AbstractFacade<EspecificacionFacade> {
 	}
 
 	public EspecificacionFacade() {
-		super(EspecificacionFacade.class);
+		super(EspecificacionBateria.class);
 	}
 
 	/**

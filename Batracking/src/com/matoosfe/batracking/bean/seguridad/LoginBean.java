@@ -113,10 +113,11 @@ public class LoginBean extends AbstractManagedBean implements Serializable {
 		DefaultMenuItem iteRepPro = new DefaultMenuItem("Reporte");
 		iteRepPro.setUrl("/pages/reportes/repVidaUtil.mat");
 		
-		DefaultMenuItem iteRepCo = new DefaultMenuItem("Códigos");
-		iteRepCo.setUrl("/pages/reportes/repCodigos.mat");
-
 		if (usuario.getEntidad().getTipoEntidad().getTipentNombre().equals(EnumTipoEntidad.FABRICA.toString())) {
+		
+			DefaultMenuItem iteRepCo = new DefaultMenuItem("Códigos");
+			iteRepCo.setUrl("/pages/reportes/repCodigos.mat");
+			
 			DefaultSubMenu menuSeg = new DefaultSubMenu("Seguridad", "ui-icon-key");
 
 			DefaultMenuItem iteUsu = new DefaultMenuItem("Usuario");
@@ -142,11 +143,24 @@ public class LoginBean extends AbstractManagedBean implements Serializable {
 
 			DefaultMenuItem itePal = new DefaultMenuItem("Pallet");
 			itePal.setUrl("/pages/admin/pallet.mat");
+			
+			DefaultMenuItem iteEspecificacion = new DefaultMenuItem("Especificación");
+			iteEspecificacion.setUrl("/pages/admin/especificacion.mat");
+			
+			DefaultMenuItem iteModeloAuto = new DefaultMenuItem("Modelo");
+			iteModeloAuto.setUrl("/pages/admin/modelo.mat");
+			
+			DefaultMenuItem iteMarcaAuto = new DefaultMenuItem("Marca");
+			iteMarcaAuto.setUrl("/pages/admin/pallet.mat");
 
 			menuAdm.addElement(iteEnt);
 			menuAdm.addElement(iteRelEnt);
 			menuAdm.addElement(itePro);
 			menuAdm.addElement(itePal);
+			menuAdm.addElement(iteEspecificacion);
+			menuAdm.addElement(iteModeloAuto);
+			menuAdm.addElement(iteMarcaAuto);
+			
 			menuModel.addElement(menuAdm);
 
 			menuSegu.addElement(iteTra);
@@ -166,17 +180,14 @@ public class LoginBean extends AbstractManagedBean implements Serializable {
 			menuRep.addElement(iteRepPro);
 			menuModel.addElement(menuRep);
 			
-			menuRep.addElement(iteRepCo);
-			menuModel.addElement(menuRep);			
+		
 		} else {
 			menuSegu.addElement(iteTra);
 			menuModel.addElement(menuSegu);
 
 			menuRep.addElement(iteRepPro);
 			menuModel.addElement(menuRep);
-			
-			menuRep.addElement(iteRepCo);
-			menuModel.addElement(menuRep);			
+					
 		}
 	}
 
