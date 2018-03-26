@@ -14,12 +14,14 @@ import org.primefaces.event.SelectEvent;
 
 import com.matoosfe.batracking.bean.seguridad.LoginBean;
 import com.matoosfe.batracking.modelo.Entidad;
+import com.matoosfe.batracking.modelo.EspecificacionBateria;
 import com.matoosfe.batracking.modelo.Parametro;
 import com.matoosfe.batracking.modelo.Producto;
 import com.matoosfe.batracking.modelo.Seguimiento;
 import com.matoosfe.batracking.modelo.TipoBateria;
 import com.matoosfe.batracking.modelo.Usuario;
 import com.matoosfe.batracking.negocio.admin.EntidadFacade;
+import com.matoosfe.batracking.negocio.admin.EspecificacionFacade;
 import com.matoosfe.batracking.negocio.admin.ParametroFacade;
 import com.matoosfe.batracking.negocio.admin.ProductoFacade;
 import com.matoosfe.kernel.web.bean.AbstractManagedBean;
@@ -41,8 +43,10 @@ public class ProductoBean extends AbstractManagedBean {
 	private List<Producto> listaProductos;
 	private List<Producto> listaProductosSel;
 	private List<SelectItem> listaFabricante;
+	private List<SelectItem> listaEspecificaciones;
+	private int idEspecificacion;
+	
 	private int idFab;
-
 	private int idFabLot;
 	private String semillaLot;
 	private int inicioCodLot;
@@ -66,6 +70,8 @@ public class ProductoBean extends AbstractManagedBean {
 	private EntidadFacade adminFabricante;
 	@EJB
 	private ParametroFacade adminParametro;
+	@EJB
+	private EspecificacionFacade adminEspecificacion;
 
 	public ProductoBean() {
 		this.producto = new Producto();
@@ -74,6 +80,7 @@ public class ProductoBean extends AbstractManagedBean {
 		this.listaProductosBus = new ArrayList<>();
 		this.listaParametrizacion = new ArrayList<>();
 		this.listaTipoBaterias = new ArrayList<>();
+		this.listaEspecificaciones = new ArrayList<>();
 
 		this.usuarioSesion = ((LoginBean) recuperarParametroSession("loginBean")).getUsuario();
 	}
@@ -377,6 +384,22 @@ public class ProductoBean extends AbstractManagedBean {
 	public void setValorBusquedaProd(String valorBusquedaProd) {
 		this.valorBusquedaProd = valorBusquedaProd;
 	}
+	
+	public int getIdEspecificacion() {
+		return idEspecificacion;
+	}
+
+	public void setIdEspecificacion(int idEspecificacion) {
+		this.idEspecificacion = idEspecificacion;
+	}
+	
+	public List<SelectItem> getListaEspecificaciones() {
+		return listaEspecificaciones;
+	}
+
+	public void setListaEspecificaciones(List<SelectItem> listaEspecificaciones) {
+		this.listaEspecificaciones = listaEspecificaciones;
+	}
 
 	/**
 	 * Método para seleccionar un registro de producto
@@ -396,6 +419,8 @@ public class ProductoBean extends AbstractManagedBean {
 			producto.setParametro(parametro);
 			Entidad fabricante = adminFabricante.buscarPorId(idFab);
 			producto.setEntidad(fabricante);
+			EspecificacionBateria especificacion = adminEspecificacion.buscarPorId(idEspecificacion);
+			producto.setEspecficacionBateria(especificacion);
 			TipoBateria tipoBateria = adminProducto.buscarTipoBateria(idTipBat);
 			producto.setTipoBateria(tipoBateria);
 			producto.setProdEstadoBateria("FABRICA");
@@ -434,6 +459,7 @@ public class ProductoBean extends AbstractManagedBean {
 				this.idFab = producto.getEntidad().getIdEntidad();
 				this.idPara = producto.getParametro().getParCodigo();
 				this.idTipBat = producto.getTipoBateria().getTipbatCodigo();
+				this.idEspecificacion = producto.getEspecficacionBateria().getId();
 			} else {
 				addError("Se debe seleccionar un producto!!");
 			}
@@ -456,7 +482,7 @@ public class ProductoBean extends AbstractManagedBean {
 				addError("Se debe seleccionar un producto!!");
 			}
 		} catch (Exception e) {
-			addError("No se pudo eliminar el producto:" + e.getMessage());
+			addError("No se pudo eliminar el producto: " + e.getMessage());
 		}
 	}
 
@@ -579,6 +605,21 @@ public class ProductoBean extends AbstractManagedBean {
 	}
 
 	/**
+	 * Método para cargar las especificaciones de bateria
+	 */
+	private void cargarEspecificaciones() {
+		try {
+			this.listaEspecificaciones.clear();
+			for (EspecificacionBateria especificacion : adminEspecificacion.buscarTodos() ) {
+				this.listaEspecificaciones.add(new SelectItem(especificacion.getId(), especificacion.getCodEspecificacion() ));
+			}
+		} catch (Exception e) {
+			addError("No se pudo cargar las especificaciones de bateria:" + e.getMessage());
+		}
+
+	}
+
+	/**
 	 * Método para resetear formulario
 	 */
 	public void resetearFormulario() {
@@ -589,6 +630,7 @@ public class ProductoBean extends AbstractManagedBean {
 		this.idParaLot = 0;
 		this.idFabLot = 0;
 		this.idTipBat = 0;
+		this.idEspecificacion = 0;
 	}
 
 	/**
@@ -600,6 +642,7 @@ public class ProductoBean extends AbstractManagedBean {
 		cargarFabricantes();
 		cargarParametrizaciones();
 		cargarTiposBateria();
+		cargarEspecificaciones();
 	}
 
 }

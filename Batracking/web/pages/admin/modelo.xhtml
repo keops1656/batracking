@@ -27,7 +27,10 @@
 		</p:toolbar>
 		<br />
 		<p:panelGrid id="panGriMod" columns="4" style="width:100%">
-			<p:outputLabel for="cmbMarca" value="Marca de Vehículo"
+			<p:outputLabel for="txtCod" value="Nombre:" styleClass="etiquetaReq" />
+			<p:inputText id="txtCod" value="#{modeloAutoBean.descripcion}"
+				required="true" style="width:200px!important" />
+			<p:outputLabel for="cmbMarca" value="Marca de Vehículo:"
 				styleClass="etiquetaReq" />
 			<p:selectOneMenu id="cmbMarca" effect="drop"
 				style="width:200px!important" value="#{modeloAutoBean.idMarcaAuto}"
@@ -54,18 +57,15 @@
 					noSelectionOption="true" />
 				<f:selectItems value="#{modeloAutoBean.listaEspecificaciones}" />
 			</p:selectOneMenu>
-			<p:outputLabel for="txtCod" value="Código:" styleClass="etiquetaReq" />
-			<p:inputText id="txtCod" value="#{modeloAutoBean.modelo.descripcion}"
-				required="true" style="width:200px!important" />
 			<p:outputLabel for="txtMotor" value="Motor:"
 				styleClass="etiquetaReq" />
 			<p:inputText id="txtMotor" cols="50" style="width:200px!important"
-				value="#{modeloAutoBean.modelo.motor}"
+				value="#{modeloAutoBean.motor}"
 				required="true" />
 			<p:outputLabel for="txtAnio" value="Año:"
 				styleClass="etiquetaReq" />
 			<p:inputText id="txtAnio" cols="50" style="width:200px!important"
-				value="#{modeloAutoBean.modelo.anio}"
+				value="#{modeloAutoBean.anio}"
 				required="true" />
 		</p:panelGrid>
 		<br />
@@ -80,11 +80,11 @@
 			<p:column headerText="Marca" sortBy="#{mol.marcaAuto.id}">
 				<p:outputLabel value="#{mol.marcaAuto.descripcion}" />
 			</p:column>			
-			<p:column headerText="Especificación vehículo estándar" sortBy="#{mol.especificacionBateria.id}">
-				<p:outputLabel value="#{mol.especificacionBateria.codEspecificacion}" />
+			<p:column headerText="Especificación vehículo estándar" sortBy="#{mol.especficacionBateria.id}">
+				<p:outputLabel value="#{mol.especficacionBateria.codEspecificacion}" />
 			</p:column>
-			<p:column headerText="Especificación vehículo Full Equipo/ Servicio Publico" sortBy="#{mol.especificacionBateriaFull.id}">
-				<p:outputLabel value="ACDC2" />
+			<p:column headerText="Especificación vehículo Full Equipo/ Servicio Publico" sortBy="#{mol.especficacionBateriaFull.id}">
+				<p:outputLabel value="#{mol.especficacionBateriaFull.codEspecificacion}" />
 			</p:column>
 			
 			<p:column headerText="Código" sortBy="#{mol.descripcion}">
@@ -102,7 +102,7 @@
 		<p:confirmDialog widgetVar="diaEli" width="300" height="80"
 			message="Esta seguro de eliminar el registro?" header="Confirmación">
 			<p:commandButton value="Si" process="@this"
-				actionListener="#{productoBean.eliminar}"
+				actionListener="#{modeloAutoBean.eliminar}"
 				update=":frmGen:datTabMol :frmGen:menGen"
 				oncomplete="PF('diaEli').hide();" />
 			<p:commandButton value="No" onclick="PF('diaEli').hide();" />

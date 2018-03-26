@@ -43,12 +43,16 @@
 			</p:selectOneMenu>
 			<p:outputLabel for="txtCod" value="Código:" styleClass="etiquetaReq" />
 			<p:inputText id="txtCod" value="#{productoBean.producto.prodCodigo}"
-				required="true" style="width:200px!important" />
-			<p:outputLabel for="txtMod" value="Especificaciones:"
+				required="true" style="width:200px!important" />			
+			<p:outputLabel for="cmbEsp" value="Especificación:"
 				styleClass="etiquetaReq" />
-			<p:inputText id="txtMod" cols="50" style="width:200px!important"
-				value="#{productoBean.producto.prodEspecificaciones}"
-				required="true" />
+			<p:selectOneMenu id="cmbEsp" effect="drop"
+				style="width:200px!important" value="#{productoBean.idEspecificacion}"
+				required="true" filterMatchMode="contains">
+				<f:selectItem itemLabel="Seleccione una opción" itemValue=""
+					noSelectionOption="true" />
+				<f:selectItems value="#{productoBean.listaEspecificaciones}" />
+			</p:selectOneMenu>
 			<p:outputLabel for="calFecPro" value="Fecha Producción:"
 				styleClass="etiquetaReq" />
 			<p:calendar id="calFecPro" placeholder="yyyy-MM-dd"
@@ -92,7 +96,7 @@
 				<p:outputLabel value="#{prod.prodCodigo}" />
 			</p:column>
 			<p:column headerText="Especificaciones">
-				<p:outputLabel value="#{prod.prodEspecificaciones}" />
+				<p:outputLabel value="#{prod.especficacionBateria.codEspecificacion}" />
 			</p:column>
 			<p:column headerText="Estado" sortBy="#{prod.prodEstadoBateria}">
 				<p:outputLabel value="#{prod.prodEstadoBateria}" />

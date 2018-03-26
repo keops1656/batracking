@@ -151,7 +151,7 @@ public class LoginBean extends AbstractManagedBean implements Serializable {
 			iteModeloAuto.setUrl("/pages/admin/modelo.mat");
 			
 			DefaultMenuItem iteMarcaAuto = new DefaultMenuItem("Marca");
-			iteMarcaAuto.setUrl("/pages/admin/pallet.mat");
+			iteMarcaAuto.setUrl("/pages/admin/marca.mat");
 
 			menuAdm.addElement(iteEnt);
 			menuAdm.addElement(iteRelEnt);

@@ -240,6 +240,12 @@ public class ModeloAutoBean extends AbstractManagedBean {
 	 */
 	public void seleccionarRegistro(SelectEvent ev) {
 		this.modeloSel = (ModeloAuto) ev.getObject();
+		this.idEspecificacion = modeloSel.getEspecficacionBateria().getId();
+		this.idEspecificacionFull = modeloSel.getEspecficacionBateriaFull().getId();
+		this.idMarcaAuto= modeloSel.getMarcaAuto().getId();
+		this.anio = modeloSel.getAnio();
+		this.descripcion = modeloSel.getDescripcion();
+		this.motor = modeloSel.getMotor();
 	}
 
 	/**
@@ -251,13 +257,19 @@ public class ModeloAutoBean extends AbstractManagedBean {
 			modelo.setEspecficacionBateria(especificacion);
 			EspecificacionBateria especificacionFull = adminEspecificacion.buscarPorId(idEspecificacionFull);
 			modelo.setEspecificacionBateriaFull(especificacionFull);
+			MarcaAuto marcaAuto = adminMarcaAuto.buscarPorId(idMarcaAuto);
+			modelo.setMarcaAuto(marcaAuto);
 			modelo.setAnio(anio);
 			modelo.setDescripcion(descripcion);
 			modelo.setMotor(motor);
-			adminModeloAuto.guardar(modelo);
+			if (modelo.getId() > 0) {
+				adminModeloAuto.actualizar(modelo);
+				addInfo("Marca de auto guardada correctamente!!");
+			} else {
+				adminModeloAuto.guardar(modelo);
+				addInfo("Marca de auto actualizada correctamente!!");
+			}
 			resetearFormulario();
-			cargarModelosAutos();
-			addInfo("Marca de auto guardada correctamente!!");
 		} catch (Exception e) {
 			addError("No se pudo guardar la marca(s) de auto, revisar que el código no este duplicado");
 		}
@@ -271,8 +283,15 @@ public class ModeloAutoBean extends AbstractManagedBean {
 			if (modeloSel != null) {
 				this.modelo = modeloSel;
 				this.idEspecificacion = modelo.getEspecficacionBateria().getId();
-				this.idEspecificacionFull = modelo.getEspecficacionBateriaFull().getId();
+				if( modelo.getEspecficacionBateriaFull() != null ) {
+					this.idEspecificacionFull = modelo.getEspecficacionBateriaFull().getId();
+				}else {
+					this.idEspecificacionFull = 0;
+				}
 				this.idMarcaAuto= modelo.getMarcaAuto().getId();
+				this.descripcion = modelo.getDescripcion();
+				this.anio = modelo.getAnio();
+				this.motor = modelo.getMotor();
 			} else {
 				addError("Se debe seleccionar un modelo de Auto!!");
 			}
@@ -349,9 +368,9 @@ public class ModeloAutoBean extends AbstractManagedBean {
 		this.idEspecificacion = 0;
 		this.idEspecificacionFull = 0;
 		this.idMarcaAuto = 0;
-//		this.descripcion = "";
-//		this.motor= "";
-//		this.anio = "";
+		this.descripcion = "";
+		this.motor= "";
+		this.anio = "";
 	}
 
 	/**

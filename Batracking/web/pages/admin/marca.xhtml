@@ -1,0 +1,60 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/templates/plantilla.xhtml">
+	<ui:define name="contenido">
+		<p:growl id="menGen" />
+		<p:toolbar>
+			<f:facet name="left">
+				<p:outputLabel value="Administración de Marcas de Auto" />
+			</f:facet>
+			<f:facet name="right">
+				<p:commandButton value="Nuevo" icon="ui-icon-document"
+					process="@this"
+					actionListener="#{marcaAutoBean.resetearFormulario}" update="@form" />
+				<p:commandButton value="Guardar" icon="ui-icon-disk"
+					process="@this :frmGen:panGriMar"
+					actionListener="#{marcaAutoBean.guardar}"
+					update=":frmGen:panGriMar :frmGen:datTabMar :frmGen:menGen" />
+				<p:commandButton value="Editar" icon="ui-icon-pencil"
+					process="@this" actionListener="#{marcaAutoBean.editar}"
+					update=":frmGen:panGriMar :frmGen:menGen" />
+				<p:commandButton value="Eliminar" icon="ui-icon-trash"
+					onclick="PF('diaEli').show();" />
+			</f:facet>
+		</p:toolbar>
+		<br />
+		<p:panelGrid id="panGriMar" columns="2" style="width:100%">
+			<p:outputLabel for="txtNombreMarca" value="Nombre de la Marca:"
+				styleClass="etiquetaReq" />
+			<p:inputText id="txtNombreMarca" value="#{marcaAutoBean.marca.descripcion}"
+						required="true" style="width:200px!important" />				
+		</p:panelGrid>
+		<br />
+		<p:dataTable id="datTabMar" value="#{marcaAutoBean.listaMarcas}"
+			var="mar" rowKey="#{mar.descripcion}" selectionMode="single"
+			paginator="true" rows="10">
+			<f:facet name="header">
+				<p:outputLabel value="Lista de Marca de Autos" />
+			</f:facet>
+			<p:ajax event="rowSelect"
+				listener="#{marcaAutoBean.seleccionarRegistro}" />
+				
+			<p:column headerText="Nombre de la marca">
+				<p:outputLabel value="#{mar.descripcion}" />
+			</p:column>
+		</p:dataTable>
+	</ui:define>
+	<ui:define name="mensaje">
+		<p:confirmDialog widgetVar="diaEli" width="300" height="80"
+			message="Esta seguro de eliminar el registro?" header="Confirmación">
+			<p:commandButton value="Si" process="@this"
+				actionListener="#{marcaAutoBean.eliminar}"
+				update=":frmGen:datTabMar :frmGen:menGen"
+				oncomplete="PF('diaEli').hide();" />
+			<p:commandButton value="No" onclick="PF('diaEli').hide();" />
+		</p:confirmDialog>
+	</ui:define>
+ </ui:composition>
