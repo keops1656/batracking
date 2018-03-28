@@ -106,7 +106,7 @@ public class wsSeguimiento {
 			try {
 				producto = productoEJB.buscarProductoDadoCodigo(strCodigo);
 				if( producto.getProdEstadoBateria().equals("EN FABRICA") ){
-					objResultado.setStrMensaje("La Bateria aún no se ha vendido");
+					objResultado.setStrMensaje("La Bateria aún no ha vendido");
 					return objResultado;
 				}
 			}catch(Exception e) {
